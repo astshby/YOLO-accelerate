@@ -1,0 +1,127 @@
+{
+  "schema": "npu128-mmio-functional-v1",
+  "status": "PASS",
+  "date": "2026-10-24",
+  "source_branch": "fpga/npu128-mmio-timing",
+  "source_base_commit": "eac44da3bfd443d11a0a273c19b4b94da112c8aa",
+  "source_sha256": {
+    "rtl/adam/adam_mul_pair.sv": "2b6e9e7837087efefe1bd12f9866d68219ec09fdbe2bd68925c1d7d03221f935",
+    "rtl/adam/adam_sdp_ram.sv": "20d2ca02713ea7eb826535a8ec7c9131c4b9ede0598b22b254f88d9e59043d0e",
+    "rtl/adam/adam_mac128.sv": "39ed2571e05469ff3247d943d7bdb05c3d71f447019a2134cfcb8dbfb1471b50",
+    "rtl/adam/adam_conv128.sv": "a7cd862b4d5ad399e00cab798bb43221c81dd54fa547fbd8ce74ee1ecbe39b5d",
+    "rtl/npu/npu_postprocess.sv": "b4acb84b9d2fd6df3e529b4d30c31f8636a59f40ae9c6d9d1da26bc975b3afa8",
+    "rtl/npu/npu_conv128.sv": "2f9ff37bb69fae17e787582fbf1b847cb90dfd12eede077baa17f592c4d5c7bb",
+    "rtl/npu/npu_mmio128.sv": "864f6750fed3a92bd52881d59359ca8a2907a16c2335c6a33f1485a213fca667",
+    "tb/npu_mmio128.cpp": "d482be2c3e6c92168a9ea74ddb2aa54c2d4ee344bc6509f045a5fd6155b9139c",
+    "tb/npu_reference.h": "ca44e98b4d5baa8d105df3105b8c1c7a9205716c70da79182f4bbfdb9f6e3e60",
+    "tb/npu_mmio_header.c": "a115c4173a090c35852590e5f4b4b95dbde6f3bfc1f1875ef614842b98e4a1c0",
+    "software/npu128_mmio.h": "7e1720ef603a3d039e32ef9d2d1864303230a9429b37743c63f7dc5f2f902b93",
+    "tools/run_mmio_tests.py": "44a3d23f96f84a5035e455f157e593a9eb230169cdc325cd6ac79f768e172760",
+    "tools/run_npu_tests.py": "a47350ddc80b6ee3958d0405e59ed3b7f6c2e36274c59d148fe5241739196460",
+    "tools/run_guarded.py": "0c3098fed4b23d1765a229dc39370fb8ec1b6701e525cdfae53bc8f060c7a84e"
+  },
+  "result": "PASS npu_mmio128: 19 tasks, 672 scalar-checked output vectors, 268573 public-bus transactions, 402854 response stall cycles, 16 rejected accesses, 2 reset recoveries; three modes, full banks/weights, prefetch, output backpressure",
+  "metrics": [
+    {
+      "command": [
+        "cc",
+        "-std=c11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-pedantic",
+        "-fsyntax-only",
+        "tb/npu_mmio_header.c"
+      ],
+      "returncode": 0,
+      "guard_stop": null,
+      "elapsed_seconds": 0.05541424499824643,
+      "sampled_process_group_peak_rss_bytes": 2617344,
+      "minimum_linux_available_bytes": 15705235456,
+      "rss_limit_mib": 768,
+      "per_process_address_space_limit_mib": 1536,
+      "linux_reserve_mib": 6144,
+      "cpu_affinity_count": 1,
+      "nice": 19,
+      "sampling_period_seconds": 0.05,
+      "limits": "RSS is sampled, not a cgroup hard limit; Windows memory is not measured here."
+    },
+    {
+      "command": [
+        "verilator",
+        "--cc",
+        "--exe",
+        "--build",
+        "-Wall",
+        "-j",
+        "1",
+        "--threads",
+        "1",
+        "--output-split",
+        "5000",
+        "--output-split-cfuncs",
+        "100",
+        "-CFLAGS",
+        "-O1 -g0",
+        "--top-module",
+        "npu_mmio128",
+        "--Mdir",
+        "/home/yukino/new_project/YOLO-accelerate/build/mmio-timing-a/obj",
+        "rtl/adam/adam_mul_pair.sv",
+        "rtl/adam/adam_sdp_ram.sv",
+        "rtl/adam/adam_mac128.sv",
+        "rtl/adam/adam_conv128.sv",
+        "rtl/npu/npu_postprocess.sv",
+        "rtl/npu/npu_conv128.sv",
+        "rtl/npu/npu_mmio128.sv",
+        "/home/yukino/new_project/YOLO-accelerate/tb/npu_mmio128.cpp"
+      ],
+      "returncode": 0,
+      "guard_stop": null,
+      "elapsed_seconds": 9.280982215001131,
+      "sampled_process_group_peak_rss_bytes": 393396224,
+      "minimum_linux_available_bytes": 15345946624,
+      "rss_limit_mib": 768,
+      "per_process_address_space_limit_mib": 1536,
+      "linux_reserve_mib": 6144,
+      "cpu_affinity_count": 1,
+      "nice": 19,
+      "sampling_period_seconds": 0.05,
+      "limits": "RSS is sampled, not a cgroup hard limit; Windows memory is not measured here."
+    },
+    {
+      "command": [
+        "/home/yukino/new_project/YOLO-accelerate/build/mmio-timing-a/obj/Vnpu_mmio128"
+      ],
+      "returncode": 0,
+      "guard_stop": null,
+      "elapsed_seconds": 0.9217274639959214,
+      "sampled_process_group_peak_rss_bytes": 4431872,
+      "minimum_linux_available_bytes": 15629406208,
+      "rss_limit_mib": 768,
+      "per_process_address_space_limit_mib": 1536,
+      "linux_reserve_mib": 6144,
+      "cpu_affinity_count": 1,
+      "nice": 19,
+      "sampling_period_seconds": 0.05,
+      "limits": "RSS is sampled, not a cgroup hard limit; Windows memory is not measured here."
+    }
+  ],
+  "verilator": "Verilator 5.052 2026-09-05 rev vUNKNOWN-built20260918",
+  "binary_sha256": "955bbc0b482ea810c857ac55223978893661b1e6a5ec73ec259eed2dea417925",
+  "unchanged_core_reference": {
+    "status": "PASS",
+    "path": "reports/npu128-ramcompact-implementation.json",
+    "sha256": "b59289c59381d4feea4203fb4526e11aababd20a5676508d082894bfc73215a1"
+  },
+  "upstream_byte_integrity": {
+    "status": "PASS",
+    "files": 51
+  },
+  "limitations": [
+    "Local single-clock request/response bus; no AXI, UART, CPU, DMA or CDC integration.",
+    "No new-wrapper PDS synthesis, place/route, board test or bitstream. Core-only 100 MHz closure does not establish wrapper timing.",
+    "RAM contents survive reset; software must load valid input/weights before use. No loaded-word coverage tracking.",
+    "One software owner serializes staging/commit and output-read/pop sequences."
+  ]
+}

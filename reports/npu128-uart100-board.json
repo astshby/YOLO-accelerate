@@ -1,0 +1,123 @@
+{
+  "schema": "npu128-uart-board-assessment-v1",
+  "status": "JTAG_PASS_UART_PENDING",
+  "scope": "actual board volatile JTAG programming/readback only; UART convolution not run",
+  "device": "PG2L200H",
+  "idcode": "0x00603899",
+  "clock_hz": 100000000,
+  "bitstream_validation_sha256": "399137f5a405af73255ea908b856f22df09c04cf1d4a11c201ced7cda20b1fdc",
+  "bitstream_sha256": "f5d339f84b8dba346469d080c98673b471abd58c664c85521bd5a7d7b1cdd468",
+  "usercode": "0x12810001",
+  "config_status": "0x001ffca0",
+  "done": true,
+  "configuration_error_mask": "0x1800001f",
+  "configuration_error_bits": 0,
+  "jtag_readback_verified": true,
+  "jtag_clock_hz": 5000000,
+  "jtag_receipt": {
+    "schema": "npu128-uart-jtag-v1",
+    "status": "PASS",
+    "bitstream_sha256": "f5d339f84b8dba346469d080c98673b471abd58c664c85521bd5a7d7b1cdd468",
+    "validation_sha256": "399137f5a405af73255ea908b856f22df09c04cf1d4a11c201ced7cda20b1fdc",
+    "scope": "volatile JTAG configuration and verify; no flash/eFuse/key operations",
+    "job_limit_bytes": 1073741824,
+    "timeout_seconds": 300,
+    "peak_job_commit_bytes": 64815104,
+    "root_pid": 10536,
+    "exit_code": 0,
+    "elapsed_seconds": 49.535
+  },
+  "user_reported_key0_pressed": false,
+  "uart": {
+    "run": false,
+    "reason": "UART functional testing is collected separately; this report proves only JTAG configuration.",
+    "preflight": {
+      "timestamp_utc": "2026-10-24T15:28:31.075110+00:00",
+      "pyserial": "3.5",
+      "ports": [
+        {
+          "device": "COM9",
+          "description": "USB Serial Port (COM9)",
+          "vid": 1027,
+          "pid": 24592
+        },
+        {
+          "device": "COM7",
+          "description": "蓝牙链接上的标准串行 (COM7)",
+          "vid": null,
+          "pid": null
+        },
+        {
+          "device": "COM8",
+          "description": "蓝牙链接上的标准串行 (COM8)",
+          "vid": null,
+          "pid": null
+        },
+        {
+          "device": "COM3",
+          "description": "蓝牙链接上的标准串行 (COM3)",
+          "vid": null,
+          "pid": null
+        },
+        {
+          "device": "COM10",
+          "description": "USB Serial Port (COM10)",
+          "vid": 1027,
+          "pid": 24592
+        },
+        {
+          "device": "COM5",
+          "description": "蓝牙链接上的标准串行 (COM5)",
+          "vid": null,
+          "pid": null
+        },
+        {
+          "device": "COM4",
+          "description": "蓝牙链接上的标准串行 (COM4)",
+          "vid": null,
+          "pid": null
+        },
+        {
+          "device": "COM6",
+          "description": "蓝牙链接上的标准串行 (COM6)",
+          "vid": null,
+          "pid": null
+        },
+        {
+          "device": "COM11",
+          "description": "Silicon Labs CP210x USB to UART Bridge (COM11)",
+          "vid": 4292,
+          "pid": 60000
+        }
+      ],
+      "cp2102_present": true,
+      "serial_port_opened": false
+    }
+  },
+  "flash_written": false,
+  "efuse_or_keys_written": false,
+  "bitstream_attempts": [],
+  "source_sha256": {
+    "tools/pango/program_uart_board.ps1": "a24883c2280f405b031213d7d1869a40b80fbdf1d78aa688cb96e2fb857a81a2",
+    "tools/pango/scan_uart_board.tcl": "0211246273c0df029db55eb816557236a125abc973282791a7102c9c154da71d",
+    "tools/pango/collect_uart_board.py": "f42928470ffb65f1f461aab0791a9388fdba639568acb104f470295a3cf3ed55",
+    "tools/npu_uart.py": "e22b0a54a8fb48546b106ebb04bc822a7e11474715e8e19bd6a8bf1c259bbdf5"
+  },
+  "raw_evidence_sha256": {
+    "scan.log": "ef3cad0e5ddfbb2750235b109176193b40c221340c7da55d9835d6461f2ad9e6",
+    "program_uart_board.ps1": "a24883c2280f405b031213d7d1869a40b80fbdf1d78aa688cb96e2fb857a81a2",
+    "GuardedJob.cs": "70dd42a153c8171629f78040b5bc6b4ee5319ff53076ef8459532215578c6e4e",
+    "program-a/program.tcl": "3296e3af43c47089cd86f77ac29320940e015d99bd20ff254020fbacd9db2c3a",
+    "program-a/program.log": "af9a649988bb8d56f6de81c5f310327aaa955e7004f2e1c5a42b3bc1bf464fe4",
+    "program-a/program-receipt.json": "27e9358b8cb504a55d66c5f5988b5eccc765c213f619a0a16c10db7a5c4a13bc",
+    "program-a/bitstream-validation.json": "399137f5a405af73255ea908b856f22df09c04cf1d4a11c201ced7cda20b1fdc",
+    "serial-inventory.json": "bd66ed3e267736eb4816d5a966cd3e522297d746d8e5e13fd954934cd6a82227",
+    "jtag-server.stdout.log": "6d0d74f94dee9f5c853b306f5f4aa16cfe35ccbfd596c0153219fd735bf96ef8",
+    "jtag-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "limitations": [
+    "DONE, usercode and readback validate FPGA configuration, not convolution behavior.",
+    "No physical UART ID/ABI or numerical test. Existing pin-level RTL and byte-level mapped tests remain separate.",
+    "Configuration is volatile; power cycling requires programming again."
+  ]
+}

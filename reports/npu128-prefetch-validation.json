@@ -1,0 +1,1365 @@
+{
+  "schema": "npu128-prefetch-validation-v1",
+  "date": "2026-10-24",
+  "status": "PASS",
+  "source_branch": "fpga/npu128-prefetch",
+  "source_base_commit": "8315580a4c62755ad652da24f20a7e89d1a15278",
+  "source_identity_note": "Changes were uncommitted during measurement; source hashes identify the exact tested implementation.",
+  "verilator": "Verilator 5.052 2026-09-05 rev vUNKNOWN-built20260918",
+  "source_sha256": {
+    "tb/adam_upstream.vlt": "d6f885e694573a732b7d56ed826fe8be757b82276ac0be4cfb48db88b7d24c74",
+    "tb/tb_adam_primitives.sv": "1bb2fcacdead2bfd4ffeae30fbbac922700a569440fef73907532f622ccbcb27",
+    "third_party/adamgallas/source/cal_mul_int8_x2.v": "bcf37e0b7704986e83ea1faa601d2d14f49ff5e7f05adc0d5202ef527ae5a8ae",
+    "third_party/adamgallas/source/cal_mul_int8_x2_dsp.v": "52bfbd6338fe566c4a0cc863c3ebea53a1b99f33c5674a79d9ee1b352384eaf6",
+    "third_party/adamgallas/source/com_simple_dual_port_ram.v": "902b3124668c46a089bb77a7a4f641fe36a5f25f07bd752379d56fa117499d0f",
+    "rtl/adam/adam_mul_pair.sv": "2b6e9e7837087efefe1bd12f9866d68219ec09fdbe2bd68925c1d7d03221f935",
+    "rtl/adam/adam_sdp_ram.sv": "20d2ca02713ea7eb826535a8ec7c9131c4b9ede0598b22b254f88d9e59043d0e",
+    "tb/adam_primitives.cpp": "02573bdbccff017226fe4337ef29799bf635a974561e4740ee2e47d6d23e4e23",
+    "tools/run_guarded.py": "0c3098fed4b23d1765a229dc39370fb8ec1b6701e525cdfae53bc8f060c7a84e",
+    "tools/run_adam_tests.py": "ae2823e595be1f5813c50e0fc8252f6fc19966b5580914af41b1297dbd5321a3",
+    "rtl/adam/adam_mac128.sv": "39ed2571e05469ff3247d943d7bdb05c3d71f447019a2134cfcb8dbfb1471b50",
+    "tb/adam_mac128.cpp": "d239c012eb04f70364e59aba24d326d105cdfd8fbf594e28da1e01cfbd3a87c5",
+    "rtl/adam/adam_conv128.sv": "86dfb8913db6a679489f33426c49eacedbcf1f46c58cdee964977fac91d288c4",
+    "tb/adam_conv128.cpp": "835405e9e42a5878f71eaab60bf6f9ba15212f032fcc69fb23f17a6b0c044887",
+    "software/adam128_cycle_model.h": "389b9e45198ed34745008c3ae71b8a56f09bdf1699fc5fee81b22d773d5b82e2",
+    "rtl/npu/npu_postprocess.sv": "b4acb84b9d2fd6df3e529b4d30c31f8636a59f40ae9c6d9d1da26bc975b3afa8",
+    "tb/npu_postprocess.cpp": "539a475a1cf32637a71481d047603fa8c6ab506a1806dd9b1bfb08c26caf4990",
+    "tb/npu_reference.h": "ca44e98b4d5baa8d105df3105b8c1c7a9205716c70da79182f4bbfdb9f6e3e60",
+    "tools/run_npu_tests.py": "a47350ddc80b6ee3958d0405e59ed3b7f6c2e36274c59d148fe5241739196460",
+    "rtl/npu/npu_conv128.sv": "2f9ff37bb69fae17e787582fbf1b847cb90dfd12eede077baa17f592c4d5c7bb",
+    "tb/npu_conv128.cpp": "545c56b9c1bba90a0e7db175db9dd5983496d82ea89061706c649545e945ef53",
+    "tb/npu_prefetch.cpp": "66a9a1887ed15cc305c74f8e905536a92cf7e4c252b9ae381b0f0504395ee340",
+    "rtl/npu/npu_measure_top.sv": "b2578e934d4b0591b0d34e40e696532214f490843db3ea0f62413e1724d094bf",
+    "tb/npu_measure_top.cpp": "d089ded4dca010c2844f979c281fefb14a304124491b43295f52632d378b2397",
+    "sim/adam_image_server.cpp": "d67e753ef58d4d5d328808ebd1d9010eb2ddf50fc6fa3321ec68ea982095d996",
+    "tb/check_image_backend.py": "ec6389e2758231aa50ccf3dd6b22cc9aee30afb0c7d9be4917f45aaa6608d0c6",
+    "tools/adam_image_backend.py": "a0fcc92bd846f55a205f73174d45b50015016cf6745dfd6e33f88e5e0a32e2be",
+    "tb/npu_profile.cpp": "5fcb1d2e8797b172892edd336125bfab0ac2c51531e6131e841770739ded6e13",
+    "tools/profile_npu.py": "660a93147b4152c27f3458b89404ee5673bdab9e7cadfda0c5c89543eb3bf4ef",
+    "tools/compare_npu_profiles.py": "260ea6bb76c2224e0eadf8ec08dd54b9c4bd018346cd4a5185c070d362a67a66",
+    "tools/build_image_sim.py": "4b5c3aa807d765a6fcce815932253e24869afec90231a94772199591907c1663",
+    "tools/pango/check_netlist.py": "f742107fc5c51e44fba4ef95e84dfea7efb5afeaa6bf263dbb3080083887f66b",
+    "tools/pango/compact_trace.py": "bdbb7c815f3b1fde84e467dee8cf7a0c06ae1429a82965361adcc9ef7b57bc37",
+    "tools/pango/stage_implementation.py": "c7c2a00b5718360ca3c6f9a6160f86ab3a236af46a6e56ed6a9da564baa6ef1d",
+    "tools/pango/collect_implementation.py": "d04ecbba3b968f45119c7f02b7354fbd6e2320f7d383f003d905e6ee0f0de0fe",
+    "tb/check_implementation_report.py": "fbb67328d94d8793856f66faccbfea25fb735b8ce969d11780669081c7f22750",
+    "tools/collect_throughput_validation.py": "9e3b73fe7ffaad46b272fd461c74161430d2b2e0cfcc38d03c0aad059f16dfb4",
+    "tools/profile_prefetch.py": "0448fb44618ace962c2a8912620122670e3948cc0e5ef4914c922272467f69c7",
+    "tools/pango/stage.py": "26353e3f649a52f0370ba09a545fb6f2c3a81fcc94e34af29e93f2264735da6e",
+    "config/board-budget.json": "8a77b842a5245f9b194f697655fef8e1e27aae41063c21f2e3438a779c39464a",
+    "config/yolox-tiny.lock.json": "f293ad6e3b24e09805fc7fc1ba9744e3cb7e876833875bb3ee621ba8473c854c"
+  },
+  "rtl_results": [
+    {
+      "name": "primitives",
+      "status": "PASS",
+      "result": "PASS adam primitives: 16777216 exhaustive INT8 triples, 1024 RAM checks; latency=4 edges",
+      "build": {
+        "command": [
+          "verilator",
+          "--cc",
+          "--exe",
+          "--build",
+          "-Wall",
+          "-j",
+          "1",
+          "--threads",
+          "1",
+          "--output-split",
+          "5000",
+          "--output-split-cfuncs",
+          "100",
+          "-CFLAGS",
+          "-O1 -g0",
+          "--top-module",
+          "tb_adam_primitives",
+          "--Mdir",
+          "build/prefetch/adam/primitives",
+          "tb/adam_upstream.vlt",
+          "tb/tb_adam_primitives.sv",
+          "third_party/adamgallas/source/cal_mul_int8_x2.v",
+          "third_party/adamgallas/source/cal_mul_int8_x2_dsp.v",
+          "third_party/adamgallas/source/com_simple_dual_port_ram.v",
+          "rtl/adam/adam_mul_pair.sv",
+          "rtl/adam/adam_sdp_ram.sv",
+          "tb/adam_primitives.cpp"
+        ],
+        "returncode": 0,
+        "guard_stop": null,
+        "elapsed_seconds": 0.15994448299170472,
+        "sampled_process_group_peak_rss_bytes": 27541504,
+        "minimum_linux_available_bytes": 15089135616,
+        "rss_limit_mib": 512,
+        "per_process_address_space_limit_mib": 1024,
+        "linux_reserve_mib": 2048,
+        "cpu_affinity_count": 1,
+        "nice": 19,
+        "sampling_period_seconds": 0.05,
+        "limits": "RSS is sampled, not a cgroup hard limit; Windows memory is not measured here."
+      },
+      "run": {
+        "command": [
+          "build/prefetch/adam/primitives/Vtb_adam_primitives"
+        ],
+        "returncode": 0,
+        "guard_stop": null,
+        "elapsed_seconds": 2.467232047987636,
+        "sampled_process_group_peak_rss_bytes": 3452928,
+        "minimum_linux_available_bytes": 15093592064,
+        "rss_limit_mib": 512,
+        "per_process_address_space_limit_mib": 1024,
+        "linux_reserve_mib": 2048,
+        "cpu_affinity_count": 1,
+        "nice": 19,
+        "sampling_period_seconds": 0.05,
+        "limits": "RSS is sampled, not a cgroup hard limit; Windows memory is not measured here."
+      },
+      "log": "build/prefetch/adam/primitives-run.log"
+    },
+    {
+      "name": "mac",
+      "status": "PASS",
+      "result": "PASS adam_mac128: 7333 vectors, 33 resets; seven-edge latency, II=1, invalid last, bubbles, INT8 extremes",
+      "build": {
+        "command": [
+          "verilator",
+          "--cc",
+          "--exe",
+          "--build",
+          "-Wall",
+          "-j",
+          "1",
+          "--threads",
+          "1",
+          "--output-split",
+          "5000",
+          "--output-split-cfuncs",
+          "100",
+          "-CFLAGS",
+          "-O1 -g0",
+          "--top-module",
+          "adam_mac128",
+          "--Mdir",
+          "build/prefetch/adam/mac",
+          "rtl/adam/adam_mul_pair.sv",
+          "rtl/adam/adam_mac128.sv",
+          "tb/adam_mac128.cpp"
+        ],
+        "returncode": 0,
+        "guard_stop": null,
+        "elapsed_seconds": 0.10772248001012485,
+        "sampled_process_group_peak_rss_bytes": 11608064,
+        "minimum_linux_available_bytes": 15092297728,
+        "rss_limit_mib": 512,
+        "per_process_address_space_limit_mib": 1024,
+        "linux_reserve_mib": 2048,
+        "cpu_affinity_count": 1,
+        "nice": 19,
+        "sampling_period_seconds": 0.05,
+        "limits": "RSS is sampled, not a cgroup hard limit; Windows memory is not measured here."
+      },
+      "run": {
+        "command": [
+          "build/prefetch/adam/mac/Vadam_mac128"
+        ],
+        "returncode": 0,
+        "guard_stop": null,
+        "elapsed_seconds": 0.05692584399366751,
+        "sampled_process_group_peak_rss_bytes": 3485696,
+        "minimum_linux_available_bytes": 15084851200,
+        "rss_limit_mib": 512,
+        "per_process_address_space_limit_mib": 1024,
+        "linux_reserve_mib": 2048,
+        "cpu_affinity_count": 1,
+        "nice": 19,
+        "sampling_period_seconds": 0.05,
+        "limits": "RSS is sampled, not a cgroup hard limit; Windows memory is not measured here."
+      },
+      "log": "build/prefetch/adam/mac-run.log"
+    },
+    {
+      "name": "conv",
+      "status": "PASS",
+      "result": "PASS adam_conv128: 131 convolutions, 9050 output pixels, 4 stitched full-image cases, 9 invalid descriptors, 19 abort/recovery cases; cycles=815796; MACs=128; seed=0x20261023",
+      "build": {
+        "command": [
+          "verilator",
+          "--cc",
+          "--exe",
+          "--build",
+          "-Wall",
+          "-j",
+          "1",
+          "--threads",
+          "1",
+          "--output-split",
+          "5000",
+          "--output-split-cfuncs",
+          "100",
+          "-CFLAGS",
+          "-O1 -g0",
+          "--top-module",
+          "adam_conv128",
+          "--Mdir",
+          "build/prefetch/adam/conv",
+          "rtl/adam/adam_mul_pair.sv",
+          "rtl/adam/adam_sdp_ram.sv",
+          "rtl/adam/adam_mac128.sv",
+          "rtl/adam/adam_conv128.sv",
+          "tb/adam_conv128.cpp"
+        ],
+        "returncode": 0,
+        "guard_stop": null,
+        "elapsed_seconds": 2.510439192003105,
+        "sampled_process_group_peak_rss_bytes": 211017728,
+        "minimum_linux_available_bytes": 14920454144,
+        "rss_limit_mib": 512,
+        "per_process_address_space_limit_mib": 1024,
+        "linux_reserve_mib": 2048,
+        "cpu_affinity_count": 1,
+        "nice": 19,
+        "sampling_period_seconds": 0.05,
+        "limits": "RSS is sampled, not a cgroup hard limit; Windows memory is not measured here."
+      },
+      "run": {
+        "command": [
+          "build/prefetch/adam/conv/Vadam_conv128"
+        ],
+        "returncode": 0,
+        "guard_stop": null,
+        "elapsed_seconds": 1.4373702129960293,
+        "sampled_process_group_peak_rss_bytes": 4403200,
+        "minimum_linux_available_bytes": 15032713216,
+        "rss_limit_mib": 512,
+        "per_process_address_space_limit_mib": 1024,
+        "linux_reserve_mib": 2048,
+        "cpu_affinity_count": 1,
+        "nice": 19,
+        "sampling_period_seconds": 0.05,
+        "limits": "RSS is sampled, not a cgroup hard limit; Windows memory is not measured here."
+      },
+      "log": "build/prefetch/adam/conv-run.log"
+    },
+    {
+      "test": "post",
+      "result": "PASS npu_postprocess: 1924 vectors, 30784 values, all 64 shifts, 256 LUT addresses, 8 invalid configurations, 12 reset recoveries",
+      "build": {
+        "command": [
+          "verilator",
+          "--cc",
+          "--exe",
+          "--build",
+          "-Wall",
+          "-j",
+          "1",
+          "--threads",
+          "1",
+          "--output-split",
+          "5000",
+          "--output-split-cfuncs",
+          "100",
+          "-CFLAGS",
+          "-O1 -g0",
+          "--top-module",
+          "npu_postprocess",
+          "--Mdir",
+          "build/prefetch/npu/post",
+          "rtl/adam/adam_sdp_ram.sv",
+          "rtl/npu/npu_postprocess.sv",
+          "tb/npu_postprocess.cpp"
+        ],
+        "returncode": 0,
+        "guard_stop": null,
+        "elapsed_seconds": 0.053092846006620675,
+        "sampled_process_group_peak_rss_bytes": 5152768,
+        "minimum_linux_available_bytes": 15732756480,
+        "rss_limit_mib": 512,
+        "per_process_address_space_limit_mib": 1024,
+        "linux_reserve_mib": 2048,
+        "cpu_affinity_count": 1,
+        "nice": 19,
+        "sampling_period_seconds": 0.05,
+        "limits": "RSS is sampled, not a cgroup hard limit; Windows memory is not measured here."
+      },
+      "run": {
+        "command": [
+          "build/prefetch/npu/post/Vnpu_postprocess"
+        ],
+        "returncode": 0,
+        "guard_stop": null,
+        "elapsed_seconds": 0.05418263698811643,
+        "sampled_process_group_peak_rss_bytes": 3788800,
+        "minimum_linux_available_bytes": 15729438720,
+        "rss_limit_mib": 512,
+        "per_process_address_space_limit_mib": 1024,
+        "linux_reserve_mib": 2048,
+        "cpu_affinity_count": 1,
+        "nice": 19,
+        "sampling_period_seconds": 0.05,
+        "limits": "RSS is sampled, not a cgroup hard limit; Windows memory is not measured here."
+      }
+    },
+    {
+      "test": "conv",
+      "result": "PASS npu_conv128: 33 tile commands, 450 output pixels in three modes, 12 invalid commands, 3 reset recoveries, 1353 postprocess stall cycles",
+      "build": {
+        "command": [
+          "verilator",
+          "--cc",
+          "--exe",
+          "--build",
+          "-Wall",
+          "-j",
+          "1",
+          "--threads",
+          "1",
+          "--output-split",
+          "5000",
+          "--output-split-cfuncs",
+          "100",
+          "-CFLAGS",
+          "-O1 -g0",
+          "--top-module",
+          "npu_conv128",
+          "--Mdir",
+          "build/prefetch/npu/conv",
+          "rtl/adam/adam_mul_pair.sv",
+          "rtl/adam/adam_sdp_ram.sv",
+          "rtl/adam/adam_mac128.sv",
+          "rtl/adam/adam_conv128.sv",
+          "rtl/npu/npu_postprocess.sv",
+          "rtl/npu/npu_conv128.sv",
+          "tb/npu_conv128.cpp"
+        ],
+        "returncode": 0,
+        "guard_stop": null,
+        "elapsed_seconds": 0.05412805899686646,
+        "sampled_process_group_peak_rss_bytes": 5722112,
+        "minimum_linux_available_bytes": 15713845248,
+        "rss_limit_mib": 512,
+        "per_process_address_space_limit_mib": 1024,
+        "linux_reserve_mib": 2048,
+        "cpu_affinity_count": 1,
+        "nice": 19,
+        "sampling_period_seconds": 0.05,
+        "limits": "RSS is sampled, not a cgroup hard limit; Windows memory is not measured here."
+      },
+      "run": {
+        "command": [
+          "build/prefetch/npu/conv/Vnpu_conv128"
+        ],
+        "returncode": 0,
+        "guard_stop": null,
+        "elapsed_seconds": 0.05359387899807189,
+        "sampled_process_group_peak_rss_bytes": 4427776,
+        "minimum_linux_available_bytes": 15706546176,
+        "rss_limit_mib": 512,
+        "per_process_address_space_limit_mib": 1024,
+        "linux_reserve_mib": 2048,
+        "cpu_affinity_count": 1,
+        "nice": 19,
+        "sampling_period_seconds": 0.05,
+        "limits": "RSS is sampled, not a cgroup hard limit; Windows memory is not measured here."
+      }
+    },
+    {
+      "test": "prefetch",
+      "result": "PASS npu_prefetch: 80 launches, 1188 output vectors, 4190 busy-time inactive-bank writes, 2304 protected conflict clocks, 4 partial-prefetch reset recoveries; 128 MAC, 3 modes, both banks",
+      "build": {
+        "command": [
+          "verilator",
+          "--cc",
+          "--exe",
+          "--build",
+          "-Wall",
+          "-j",
+          "1",
+          "--threads",
+          "1",
+          "--output-split",
+          "5000",
+          "--output-split-cfuncs",
+          "100",
+          "-CFLAGS",
+          "-O1 -g0",
+          "--top-module",
+          "npu_conv128",
+          "--Mdir",
+          "build/prefetch/npu/prefetch",
+          "rtl/adam/adam_mul_pair.sv",
+          "rtl/adam/adam_sdp_ram.sv",
+          "rtl/adam/adam_mac128.sv",
+          "rtl/adam/adam_conv128.sv",
+          "rtl/npu/npu_postprocess.sv",
+          "rtl/npu/npu_conv128.sv",
+          "tb/npu_prefetch.cpp"
+        ],
+        "returncode": 0,
+        "guard_stop": null,
+        "elapsed_seconds": 1.0769616110046627,
+        "sampled_process_group_peak_rss_bytes": 205287424,
+        "minimum_linux_available_bytes": 15550693376,
+        "rss_limit_mib": 512,
+        "per_process_address_space_limit_mib": 1024,
+        "linux_reserve_mib": 2048,
+        "cpu_affinity_count": 1,
+        "nice": 19,
+        "sampling_period_seconds": 0.05,
+        "limits": "RSS is sampled, not a cgroup hard limit; Windows memory is not measured here."
+      },
+      "run": {
+        "command": [
+          "build/prefetch/npu/prefetch/Vnpu_conv128"
+        ],
+        "returncode": 0,
+        "guard_stop": null,
+        "elapsed_seconds": 0.10491115899640135,
+        "sampled_process_group_peak_rss_bytes": 4206592,
+        "minimum_linux_available_bytes": 15670878208,
+        "rss_limit_mib": 512,
+        "per_process_address_space_limit_mib": 1024,
+        "linux_reserve_mib": 2048,
+        "cpu_affinity_count": 1,
+        "nice": 19,
+        "sampling_period_seconds": 0.05,
+        "limits": "RSS is sampled, not a cgroup hard limit; Windows memory is not measured here."
+      }
+    },
+    {
+      "test": "measure",
+      "result": "PASS npu_measure_top: 480 scan transactions, 1716 input/813 output bits, all 16 channel counts, three modes, 3x3/stride2/pad1/Ci17, four-pixel credit stalls, concurrent inactive-bank preloads/protected poison writes/bank switches and invalid command",
+      "build": {
+        "command": [
+          "verilator",
+          "--cc",
+          "--exe",
+          "--build",
+          "-Wall",
+          "-j",
+          "1",
+          "--threads",
+          "1",
+          "--output-split",
+          "5000",
+          "--output-split-cfuncs",
+          "100",
+          "-CFLAGS",
+          "-O1 -g0",
+          "--top-module",
+          "npu_measure_top",
+          "--Mdir",
+          "build/prefetch/npu/measure",
+          "rtl/adam/adam_mul_pair.sv",
+          "rtl/adam/adam_sdp_ram.sv",
+          "rtl/adam/adam_mac128.sv",
+          "rtl/adam/adam_conv128.sv",
+          "rtl/npu/npu_postprocess.sv",
+          "rtl/npu/npu_conv128.sv",
+          "rtl/npu/npu_measure_top.sv",
+          "tb/npu_measure_top.cpp"
+        ],
+        "returncode": 0,
+        "guard_stop": null,
+        "elapsed_seconds": 8.916570247005438,
+        "sampled_process_group_peak_rss_bytes": 377389056,
+        "minimum_linux_available_bytes": 15396376576,
+        "rss_limit_mib": 512,
+        "per_process_address_space_limit_mib": 1024,
+        "linux_reserve_mib": 2048,
+        "cpu_affinity_count": 1,
+        "nice": 19,
+        "sampling_period_seconds": 0.05,
+        "limits": "RSS is sampled, not a cgroup hard limit; Windows memory is not measured here."
+      },
+      "run": {
+        "command": [
+          "build/prefetch/npu/measure/Vnpu_measure_top"
+        ],
+        "returncode": 0,
+        "guard_stop": null,
+        "elapsed_seconds": 0.717218181991484,
+        "sampled_process_group_peak_rss_bytes": 4419584,
+        "minimum_linux_available_bytes": 15681830912,
+        "rss_limit_mib": 512,
+        "per_process_address_space_limit_mib": 1024,
+        "linux_reserve_mib": 2048,
+        "cpu_affinity_count": 1,
+        "nice": 19,
+        "sampling_period_seconds": 0.05,
+        "limits": "RSS is sampled, not a cgroup hard limit; Windows memory is not measured here."
+      }
+    }
+  ],
+  "mac_structure": {
+    "paired_units": 64,
+    "products_per_unit": 2,
+    "parallel_int8_products": 128,
+    "scope": "MAC datapath only; not a Pango DSP/resource report",
+    "metrics": {
+      "command": [
+        "verilator",
+        "--json-only",
+        "-Wall",
+        "--top-module",
+        "adam_conv128",
+        "--json-only-output",
+        "build/prefetch/adam/structure.json",
+        "--json-only-meta-output",
+        "build/prefetch/adam/structure.meta.json",
+        "rtl/adam/adam_mul_pair.sv",
+        "rtl/adam/adam_sdp_ram.sv",
+        "rtl/adam/adam_mac128.sv",
+        "rtl/adam/adam_conv128.sv"
+      ],
+      "returncode": 0,
+      "guard_stop": null,
+      "elapsed_seconds": 0.1578125530068064,
+      "sampled_process_group_peak_rss_bytes": 31510528,
+      "minimum_linux_available_bytes": 15041314816,
+      "rss_limit_mib": 512,
+      "per_process_address_space_limit_mib": 1024,
+      "linux_reserve_mib": 2048,
+      "cpu_affinity_count": 1,
+      "nice": 19,
+      "sampling_period_seconds": 0.05,
+      "limits": "RSS is sampled, not a cgroup hard limit; Windows memory is not measured here."
+    }
+  },
+  "upstream_byte_integrity": {
+    "status": "PASS",
+    "files": 51
+  },
+  "image_transport": {
+    "result": "PASS",
+    "convolutions": 16,
+    "invalid_requests": 4,
+    "independent_reference": "NumPy INT64 einsum across channels, untiled feature map",
+    "output_values_compared": 115392,
+    "cases": [
+      {
+        "shape_hw_ci_co_k_s_p": [
+          23,
+          29,
+          17,
+          33,
+          1,
+          1,
+          0
+        ],
+        "verify": true,
+        "rtl_clock_cycles": 18396,
+        "rtl_mac_steps": 6003,
+        "rtl_active_cycles": 16071,
+        "tile_commands": 12,
+        "output_values": 22011,
+        "scalar_checked_values": 22011,
+        "output_int32_sha256": "a63034b2d5240fd3dc45f5b8792b74b43485d7658a16f9cc67f1701732929485"
+      },
+      {
+        "shape_hw_ci_co_k_s_p": [
+          23,
+          29,
+          17,
+          33,
+          1,
+          2,
+          0
+        ],
+        "verify": true,
+        "rtl_clock_cycles": 6660,
+        "rtl_mac_steps": 1620,
+        "rtl_active_cycles": 4368,
+        "tile_commands": 12,
+        "output_values": 5940,
+        "scalar_checked_values": 5940,
+        "output_int32_sha256": "84b11aaccfa038ec028e0125937d95cea1cc5b631b7837e12418bae8c2d94204"
+      },
+      {
+        "shape_hw_ci_co_k_s_p": [
+          23,
+          29,
+          17,
+          33,
+          3,
+          1,
+          1
+        ],
+        "verify": true,
+        "rtl_clock_cycles": 57090,
+        "rtl_mac_steps": 54027,
+        "rtl_active_cycles": 54279,
+        "tile_commands": 18,
+        "output_values": 22011,
+        "scalar_checked_values": 22011,
+        "output_int32_sha256": "a329e218d98517ed7cd88a161621420d34a368e7d2ab767145710ae03c00f4d6"
+      },
+      {
+        "shape_hw_ci_co_k_s_p": [
+          23,
+          29,
+          17,
+          33,
+          3,
+          2,
+          1
+        ],
+        "verify": true,
+        "rtl_clock_cycles": 17832,
+        "rtl_mac_steps": 14580,
+        "rtl_active_cycles": 14832,
+        "tile_commands": 18,
+        "output_values": 5940,
+        "scalar_checked_values": 5940,
+        "output_int32_sha256": "77589977ec415204419f49cb732f0c6fe794168288f6cf1afc1a59ac8109aced"
+      },
+      {
+        "shape_hw_ci_co_k_s_p": [
+          7,
+          9,
+          768,
+          17,
+          3,
+          2,
+          0
+        ],
+        "verify": true,
+        "rtl_clock_cycles": 34590,
+        "rtl_mac_steps": 20736,
+        "rtl_active_cycles": 20764,
+        "tile_commands": 2,
+        "output_values": 204,
+        "scalar_checked_values": 204,
+        "output_int32_sha256": "dc89fcb4fe4a54257dd746f011b11f066f81882f3d5a18fd479217be104cbc15"
+      },
+      {
+        "shape_hw_ci_co_k_s_p": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0
+        ],
+        "verify": true,
+        "rtl_clock_cycles": 18,
+        "rtl_mac_steps": 1,
+        "rtl_active_cycles": 15,
+        "tile_commands": 1,
+        "output_values": 1,
+        "scalar_checked_values": 1,
+        "output_int32_sha256": "69d4bc192e3a16eee9b6ce51f0c32ccf947a75426b3dc430b4a48a2ab2f18bcb"
+      },
+      {
+        "shape_hw_ci_co_k_s_p": [
+          17,
+          17,
+          3,
+          5,
+          3,
+          1,
+          1
+        ],
+        "verify": true,
+        "rtl_clock_cycles": 3490,
+        "rtl_mac_steps": 2601,
+        "rtl_active_cycles": 3221,
+        "tile_commands": 4,
+        "output_values": 1445,
+        "scalar_checked_values": 1445,
+        "output_int32_sha256": "47bedf9f0619f1f01fe1bfa03a6eaa6e4f188c68e0a5c9e0029cba265d04114f"
+      },
+      {
+        "shape_hw_ci_co_k_s_p": [
+          3,
+          3,
+          8,
+          16,
+          3,
+          1,
+          1
+        ],
+        "verify": true,
+        "rtl_clock_cycles": 146,
+        "rtl_mac_steps": 81,
+        "rtl_active_cycles": 111,
+        "tile_commands": 1,
+        "output_values": 144,
+        "scalar_checked_values": 144,
+        "output_int32_sha256": "7eb6d2affadc95d3b542230c2379fe60d2d43260f8a90da9d7e4f1a92ef467c6"
+      },
+      {
+        "shape_hw_ci_co_k_s_p": [
+          23,
+          29,
+          17,
+          33,
+          1,
+          1,
+          0
+        ],
+        "verify": false,
+        "rtl_clock_cycles": 18396,
+        "rtl_mac_steps": 6003,
+        "rtl_active_cycles": 16071,
+        "tile_commands": 12,
+        "output_values": 22011,
+        "scalar_checked_values": 0,
+        "output_int32_sha256": "5fce1ad71ae825cd99eec1867e778b0912b59b94f0b276a38a25b71ac4f17856"
+      },
+      {
+        "shape_hw_ci_co_k_s_p": [
+          23,
+          29,
+          17,
+          33,
+          1,
+          2,
+          0
+        ],
+        "verify": false,
+        "rtl_clock_cycles": 6660,
+        "rtl_mac_steps": 1620,
+        "rtl_active_cycles": 4368,
+        "tile_commands": 12,
+        "output_values": 5940,
+        "scalar_checked_values": 0,
+        "output_int32_sha256": "52eb3127ee62dd3490025017d4f0952108fe1c2f78d8145bd7ca20c4a9371ea6"
+      },
+      {
+        "shape_hw_ci_co_k_s_p": [
+          23,
+          29,
+          17,
+          33,
+          3,
+          1,
+          1
+        ],
+        "verify": false,
+        "rtl_clock_cycles": 57090,
+        "rtl_mac_steps": 54027,
+        "rtl_active_cycles": 54279,
+        "tile_commands": 18,
+        "output_values": 22011,
+        "scalar_checked_values": 0,
+        "output_int32_sha256": "06a1ab9eaacfa9bc56669d74287da49504c9b2b74658f108dc202714db059dde"
+      },
+      {
+        "shape_hw_ci_co_k_s_p": [
+          23,
+          29,
+          17,
+          33,
+          3,
+          2,
+          1
+        ],
+        "verify": false,
+        "rtl_clock_cycles": 17832,
+        "rtl_mac_steps": 14580,
+        "rtl_active_cycles": 14832,
+        "tile_commands": 18,
+        "output_values": 5940,
+        "scalar_checked_values": 0,
+        "output_int32_sha256": "690cccf24e9c70fee2260bb340eae1c81448442c247f929262ba7b8bdfc0a165"
+      },
+      {
+        "shape_hw_ci_co_k_s_p": [
+          7,
+          9,
+          768,
+          17,
+          3,
+          2,
+          0
+        ],
+        "verify": false,
+        "rtl_clock_cycles": 34590,
+        "rtl_mac_steps": 20736,
+        "rtl_active_cycles": 20764,
+        "tile_commands": 2,
+        "output_values": 204,
+        "scalar_checked_values": 0,
+        "output_int32_sha256": "efc99cc93597b2314bafbd9f6da7838a5ab55e00323817a11ebfbb51b68ba315"
+      },
+      {
+        "shape_hw_ci_co_k_s_p": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0
+        ],
+        "verify": false,
+        "rtl_clock_cycles": 18,
+        "rtl_mac_steps": 1,
+        "rtl_active_cycles": 15,
+        "tile_commands": 1,
+        "output_values": 1,
+        "scalar_checked_values": 0,
+        "output_int32_sha256": "904304d28ac791858b7c26f383f141db254f7f32a80534e2310e557ebccd0dd1"
+      },
+      {
+        "shape_hw_ci_co_k_s_p": [
+          17,
+          17,
+          3,
+          5,
+          3,
+          1,
+          1
+        ],
+        "verify": false,
+        "rtl_clock_cycles": 3490,
+        "rtl_mac_steps": 2601,
+        "rtl_active_cycles": 3221,
+        "tile_commands": 4,
+        "output_values": 1445,
+        "scalar_checked_values": 0,
+        "output_int32_sha256": "47bedf9f0619f1f01fe1bfa03a6eaa6e4f188c68e0a5c9e0029cba265d04114f"
+      },
+      {
+        "shape_hw_ci_co_k_s_p": [
+          3,
+          3,
+          8,
+          16,
+          3,
+          1,
+          1
+        ],
+        "verify": false,
+        "rtl_clock_cycles": 146,
+        "rtl_mac_steps": 81,
+        "rtl_active_cycles": 111,
+        "tile_commands": 1,
+        "output_values": 144,
+        "scalar_checked_values": 0,
+        "output_int32_sha256": "7eb6d2affadc95d3b542230c2379fe60d2d43260f8a90da9d7e4f1a92ef467c6"
+      }
+    ]
+  },
+  "image_transport_metrics": {
+    "command": [
+      "python3",
+      "tb/check_image_backend.py",
+      "--simulator",
+      "build/prefetch/image/obj/Vadam_conv128",
+      "--output",
+      "build/prefetch/image-test.json"
+    ],
+    "returncode": 0,
+    "guard_stop": null,
+    "elapsed_seconds": 0.6756038379971869,
+    "sampled_process_group_peak_rss_bytes": 38133760,
+    "minimum_linux_available_bytes": 15669141504,
+    "rss_limit_mib": 512,
+    "per_process_address_space_limit_mib": 1024,
+    "linux_reserve_mib": 2048,
+    "cpu_affinity_count": 1,
+    "nice": 19,
+    "sampling_period_seconds": 0.05,
+    "limits": "RSS is sampled, not a cgroup hard limit; Windows memory is not measured here."
+  },
+  "mapped_functional": {
+    "schema": "npu128-mapped-functional-v1",
+    "status": "PASS",
+    "engine": "iverilog",
+    "scope": "functional GTP simulation, no SDF or routed timing",
+    "netlist_sha256": "e807f2322a63e407805de96066367fce7628308c6d397be05b6921263ba6203b",
+    "test_sha256": "d089ded4dca010c2844f979c281fefb14a304124491b43295f52632d378b2397",
+    "test_result": "Progress: 304 requests, 16 snapshots, 771 clocks\nProgress: 320 requests, 32 snapshots, 999 clocks\nProgress: 336 requests, 48 snapshots, 1217 clocks\nProgress: 352 requests, 64 snapshots, 1435 clocks\nProgress: 368 requests, 80 snapshots, 1663 clocks\nProgress: 384 requests, 96 snapshots, 1881 clocks\nProgress: 442 requests, 112 snapshots, 2258 clocks\nProgress: 464 requests, 128 snapshots, 2451 clocks\nPASS mapped NPU transaction replay: 480 requests, 141 snapshots, 2623 clocks; only scan shifts and performance-counter comparison omitted",
+    "metrics": [
+      {
+        "command": [
+          "/home/yukino/new_project/YOLO-accelerate/build/prefetch/npu/measure/Vnpu_measure_top"
+        ],
+        "returncode": 0,
+        "guard_stop": null,
+        "elapsed_seconds": 0.8275650630093878,
+        "sampled_process_group_peak_rss_bytes": 4595712,
+        "minimum_linux_available_bytes": 15746449408,
+        "rss_limit_mib": 2048,
+        "per_process_address_space_limit_mib": 3072,
+        "linux_reserve_mib": 6144,
+        "cpu_affinity_count": 1,
+        "nice": 19,
+        "sampling_period_seconds": 0.05,
+        "limits": "RSS is sampled, not a cgroup hard limit; Windows memory is not measured here."
+      },
+      {
+        "command": [
+          "/usr/bin/python3",
+          "/home/yukino/new_project/YOLO-accelerate/tools/pango/compact_trace.py",
+          "/home/yukino/new_project/YOLO-accelerate/build/prefetch/netlist/rtl-pins.hex",
+          "/home/yukino/new_project/YOLO-accelerate/build/prefetch/netlist/transactions.hex"
+        ],
+        "returncode": 0,
+        "guard_stop": null,
+        "elapsed_seconds": 0.7752663120045327,
+        "sampled_process_group_peak_rss_bytes": 15347712,
+        "minimum_linux_available_bytes": 15727329280,
+        "rss_limit_mib": 2048,
+        "per_process_address_space_limit_mib": 3072,
+        "linux_reserve_mib": 6144,
+        "cpu_affinity_count": 1,
+        "nice": 19,
+        "sampling_period_seconds": 0.05,
+        "limits": "RSS is sampled, not a cgroup hard limit; Windows memory is not measured here."
+      },
+      {
+        "command": [
+          "build/tools/iverilog/root/usr/bin/iverilog",
+          "-B",
+          "build/tools/iverilog/root/usr/lib/x86_64-linux-gnu/ivl",
+          "-g2012",
+          "-y",
+          "/mnt/f/pango/PDS_2025.2-ads/arch/vendor/pango/verilog/simulation",
+          "-s",
+          "tb_npu_transaction_replay",
+          "-o",
+          "/home/yukino/new_project/YOLO-accelerate/build/prefetch/netlist/mapped.vvp",
+          "/mnt/f/pango-project/work/npu128-prefetch-20261024a/prj_tasks/syn_1/synthesize/npu_measure_top_syn.vm",
+          "/home/yukino/new_project/YOLO-accelerate/tb/tb_npu_transaction_replay.sv"
+        ],
+        "returncode": 0,
+        "guard_stop": null,
+        "elapsed_seconds": 81.87840495900309,
+        "sampled_process_group_peak_rss_bytes": 1641848832,
+        "minimum_linux_available_bytes": 14093500416,
+        "rss_limit_mib": 2048,
+        "per_process_address_space_limit_mib": 3072,
+        "linux_reserve_mib": 6144,
+        "cpu_affinity_count": 1,
+        "nice": 19,
+        "sampling_period_seconds": 0.05,
+        "limits": "RSS is sampled, not a cgroup hard limit; Windows memory is not measured here."
+      },
+      {
+        "command": [
+          "build/tools/iverilog/root/usr/bin/vvp",
+          "-M",
+          "build/tools/iverilog/root/usr/lib/x86_64-linux-gnu/ivl",
+          "/home/yukino/new_project/YOLO-accelerate/build/prefetch/netlist/mapped.vvp",
+          "+TRACE=/home/yukino/new_project/YOLO-accelerate/build/prefetch/netlist/transactions.hex"
+        ],
+        "returncode": 0,
+        "guard_stop": null,
+        "elapsed_seconds": 831.1328575910011,
+        "sampled_process_group_peak_rss_bytes": 624586752,
+        "minimum_linux_available_bytes": 14920454144,
+        "rss_limit_mib": 2048,
+        "per_process_address_space_limit_mib": 3072,
+        "linux_reserve_mib": 6144,
+        "cpu_affinity_count": 1,
+        "nice": 19,
+        "sampling_period_seconds": 0.05,
+        "limits": "RSS is sampled, not a cgroup hard limit; Windows memory is not measured here."
+      }
+    ],
+    "pin_trace_sha256": "4da72b2dc58c1c49b1cdc7c1e64dbaa2e5fc9390798e6167b21d3387538ef459",
+    "replay_test_sha256": "1797b28ca99e513b60a05949cb36f188f03d07a8f3648513f0b7787af7ada505",
+    "serial_shifts_replayed": false,
+    "performance_counters_compared": false,
+    "compact_trace_sha256": "5293b5f8f9280de013f75d316357528ee757910e66312676859dcce9e57e7f60",
+    "gtp_model_sha256": {
+      "GTP_GRS.v": "dae720bcc467ddb4ff99f2753368934e2649b87f6ac63b8a0d7219699bac1dec",
+      "GTP_LUT6D.v": "98170b772b3a38a9b2b1ba114bdc4c179ed0f9f17ac0e9784eda8a3e69b2d646",
+      "GTP_LUT5.v": "7835a0cf88a3249b36615ea127eb3b32b18f4e118ce0efb70907720a140beaf9",
+      "GTP_MUX2LUT6.v": "307d95f567f6d20ce4941dc8cadb885d4be33d660817973fec341a20fef8229a",
+      "GTP_LUT2.v": "a5133f378fc5c3e4a3583838108babaa2d7d63e4bb6de0200afa4f3a34cefb83",
+      "GTP_LUT4.v": "f7ed2c8232da3fa9d11638676fc7394a98da9adcf71d69fa6e6081fca62cddb7",
+      "GTP_LUT6.v": "b228940718adc4a60e1a280ccf394a62e1f5a8900a641b9943de4a244d5a3a17",
+      "GTP_DFF_R.v": "56d45c89a90bd96fe680c81bfd0e09c25d2e421fd3f47787e3cc26d1fbf97f96",
+      "GTP_INBUF.v": "90a5ef2b2de82c59ad0958312efe48a77df7c29b0d129e2f0de491e77844e4a5",
+      "GTP_DFF_RE.v": "033a59d838f32c58183d7e95cae59277eb7e3c8805bea4df8d21a4ae217eeb3c",
+      "GTP_OUTBUF.v": "5b789e8c770188f52e907be8804f44825fc316a9bd35d5180280233c0bda5035",
+      "GTP_LUT3.v": "95ded581f36c0c545239e93a0de43f8ca657fda7accb6786a9a3990fbbc2a4d6",
+      "GTP_LUT6CARRY.v": "2415dc72612f8ea1ca619bb23586835c143a61fe70d9477362920a41b776e4fc",
+      "GTP_DFF.v": "ebcba637217c1e2f4f6a49430533c8345f76038dccd4ed7f83a9c057b8f02c33",
+      "GTP_LUT1.v": "be4eb4f5b90af66e61745172e89615d95aec9846158e2052f1222f26ed67df9b",
+      "GTP_APM_E2.v": "7211b9646140c6c7fc0c261a3fe2ee599b538f39d0714bcb9ff5ec0caee007de",
+      "GTP_DFF_E.v": "805b03ddcbd599f6ac3d5a597caccf95d81d3746a171f1dd7cc515011f771c01",
+      "GTP_INV.v": "04dad07f24d2fac3038afb32f899feaf3de930349b44fad5f002b8c7152745ab",
+      "GTP_DRM36K_E1.v": "7c41e617e7a6d9a524964dcea853cce49826ee99444bb73048d3025ba9e7a103",
+      "GTP_DRM18K_E1.v": "99d16a5313a108694e1ab5e662d900ae4d339687df2bfd2b21a005b5125af0f5",
+      "GTP_MUX2LUT7.v": "abee5fc4d750a93447881a0eb2e35a52e6674f5fa92302fb2d1fce9d61340649",
+      "GTP_MUX2LUT8.v": "95ad73e6675fcbca6bbe52a261595035ba1f8c79068c4c77a0789e2263f1a27f",
+      "GTP_DFF_S.v": "f435940cd0a4bc9c9e16cf07885b5bb64fa259963f7a3ebd8643d0b40c438038",
+      "GTP_DFF_SE.v": "35c6b52e787d5bd2f8cc4c3c025c7f3d7dfe9b0099fb621dad435231ccaaef82"
+    }
+  },
+  "physical": {
+    "status": "PASS",
+    "project": "$PDS_WORK_ROOT/work/npu128-prefetch-20261024a",
+    "clock_period_ns": 10,
+    "device": "PG2L200H-6IFBB676",
+    "routed_fmax": [
+      {
+        "Clock": "clk",
+        "Fmax": "101.9680MHz",
+        "Requested Frequency": "100.0000MHz",
+        "Slack": "0.193"
+      }
+    ],
+    "routed_setup": [
+      {
+        "Launch Clock": "clk",
+        "Capture Clock": "clk",
+        "WNS(ns)": "3.055",
+        "TNS(ns)": "0.000",
+        "Failing Endpoints": "0",
+        "Total Endpoints": "40742",
+        "corner": "fast"
+      },
+      {
+        "Launch Clock": "clk",
+        "Capture Clock": "clk",
+        "WNS(ns)": "0.193",
+        "TNS(ns)": "0.000",
+        "Failing Endpoints": "0",
+        "Total Endpoints": "40742",
+        "corner": "slow"
+      }
+    ],
+    "routed_hold": [
+      {
+        "Launch Clock": "clk",
+        "Capture Clock": "clk",
+        "WHS(ns)": "0.037",
+        "THS(ns)": "0.000",
+        "Failing Endpoints": "0",
+        "Total Endpoints": "40742",
+        "corner": "fast"
+      },
+      {
+        "Launch Clock": "clk",
+        "Capture Clock": "clk",
+        "WHS(ns)": "0.037",
+        "THS(ns)": "0.000",
+        "Failing Endpoints": "0",
+        "Total Endpoints": "40742",
+        "corner": "slow"
+      }
+    ],
+    "resources": {
+      "npu_measure_top": {
+        "LUT": 5720.0,
+        "FF": 10753.0,
+        "APM": 82.0,
+        "DRM": 158.5
+      },
+      "u_npu(npu_conv128)": {
+        "LUT": 5299.0,
+        "FF": 6507.0,
+        "APM": 82.0,
+        "DRM": 158.5
+      },
+      "u_conv(adam_conv128)": {
+        "LUT": 3377.0,
+        "FF": 4394.0,
+        "APM": 66.0,
+        "DRM": 156.5
+      },
+      "u_post(npu_postprocess)": {
+        "LUT": 1841.0,
+        "FF": 2043.0,
+        "APM": 16.0,
+        "DRM": 2.0
+      }
+    }
+  },
+  "cycle_contract": {
+    "mac_latency_edges": 7,
+    "address_stages": 5,
+    "postprocess_stages": 6,
+    "result_slots": 2,
+    "credit_invariant": "queued results + in-flight pixels <= 2",
+    "no_stall_reference": "software/adam128_cycle_model.h; direct-convolution sink only"
+  },
+  "evidence_sha256": {
+    "build/prefetch/adam/summary-all.json": "d2d9c8daccd2ac9a67ba4e268d34616c579feeb5c16a055c53731d5379a627c4",
+    "build/prefetch/npu/summary.json": "90e445a81153636d7a00e393c07be7d271d554e7d9524d6116e18649e273b5d0",
+    "build/prefetch/image/manifest.json": "dec6b8b89ca358855c0cd9f20eac23a5f460495bd9b6182a0d25137dcd714f5e",
+    "build/prefetch/image-test.json": "187bbd062b8b9b7322ed3ef2514f1392f13cfd19e2a154eb456fdd5a706f5ec1",
+    "build/prefetch/image-test.metrics.json": "cb994412c84038cbd515ccd54a6acde3b43d5eb863f05bca8b18579f21e719b9",
+    "build/prefetch/netlist/summary.json": "f63d70820e33c48f9b17a8d5a57f3e6b80bf77d593ba6dd2906bacde9b7e07dd",
+    "reports/npu128-prefetch-implementation.json": "c5927100e924694337f1b322d861cead65f9bd9416816df3a842cd0f1520f864",
+    "reports/npu128-prefetch-profile.json": "62973d5d40f9a3b60c960dd8183dd1a5f4cb67b9b801df0352ae72772ac93c86",
+    "build/prefetch/profile/summary.json": "62973d5d40f9a3b60c960dd8183dd1a5f4cb67b9b801df0352ae72772ac93c86",
+    "build/prefetch/profile/workloads.txt": "b9cd82a9fe2211aa2d76460aa7b4e3d37475bb31eb69aa1a4b91ee0ed35f1066",
+    "build/prefetch/profile/run.log": "fb7f8abda6f67704f5e50341883623df3a8995ff8240b5f75e7d1801ee905f36"
+  },
+  "route_run": true,
+  "board_run": false,
+  "full_yolox_accuracy_rerun": false,
+  "limitations": [
+    "Standalone measurement harness, automatic IO placement; no integrated CPU/DDR/PLL timing.",
+    "Gate replay compresses serial shifts and omits performance-counter comparison; no SDF.",
+    "Profiles execute recorded model tile shapes with zero data, not end-to-end inference.",
+    "Local-port load costs exclude CPU, DDR/DMA, non-convolution operators, communication and coefficient configuration."
+  ],
+  "image_transport_comparison": {
+    "baseline_sha256": "009ab4aebd27cfbee8e87db99775b5c4d077c7cc76ebee114a5e44e55a5fb65c",
+    "status": "PASS",
+    "cases": [
+      {
+        "shape_hw_ci_co_k_s_p": [
+          23,
+          29,
+          17,
+          33,
+          1,
+          1,
+          0
+        ],
+        "verify": true,
+        "before_cycles": 22095,
+        "after_cycles": 18396,
+        "output_int32_sha256": "a63034b2d5240fd3dc45f5b8792b74b43485d7658a16f9cc67f1701732929485"
+      },
+      {
+        "shape_hw_ci_co_k_s_p": [
+          23,
+          29,
+          17,
+          33,
+          1,
+          2,
+          0
+        ],
+        "verify": true,
+        "before_cycles": 9933,
+        "after_cycles": 6660,
+        "output_int32_sha256": "84b11aaccfa038ec028e0125937d95cea1cc5b631b7837e12418bae8c2d94204"
+      },
+      {
+        "shape_hw_ci_co_k_s_p": [
+          23,
+          29,
+          17,
+          33,
+          3,
+          1,
+          1
+        ],
+        "verify": true,
+        "before_cycles": 62883,
+        "after_cycles": 57090,
+        "output_int32_sha256": "a329e218d98517ed7cd88a161621420d34a368e7d2ab767145710ae03c00f4d6"
+      },
+      {
+        "shape_hw_ci_co_k_s_p": [
+          23,
+          29,
+          17,
+          33,
+          3,
+          2,
+          1
+        ],
+        "verify": true,
+        "before_cycles": 22653,
+        "after_cycles": 17832,
+        "output_int32_sha256": "77589977ec415204419f49cb732f0c6fe794168288f6cf1afc1a59ac8109aced"
+      },
+      {
+        "shape_hw_ci_co_k_s_p": [
+          7,
+          9,
+          768,
+          17,
+          3,
+          2,
+          0
+        ],
+        "verify": true,
+        "before_cycles": 34590,
+        "after_cycles": 34590,
+        "output_int32_sha256": "dc89fcb4fe4a54257dd746f011b11f066f81882f3d5a18fd479217be104cbc15"
+      },
+      {
+        "shape_hw_ci_co_k_s_p": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0
+        ],
+        "verify": true,
+        "before_cycles": 18,
+        "after_cycles": 18,
+        "output_int32_sha256": "69d4bc192e3a16eee9b6ce51f0c32ccf947a75426b3dc430b4a48a2ab2f18bcb"
+      },
+      {
+        "shape_hw_ci_co_k_s_p": [
+          17,
+          17,
+          3,
+          5,
+          3,
+          1,
+          1
+        ],
+        "verify": true,
+        "before_cycles": 3675,
+        "after_cycles": 3490,
+        "output_int32_sha256": "47bedf9f0619f1f01fe1bfa03a6eaa6e4f188c68e0a5c9e0029cba265d04114f"
+      },
+      {
+        "shape_hw_ci_co_k_s_p": [
+          3,
+          3,
+          8,
+          16,
+          3,
+          1,
+          1
+        ],
+        "verify": true,
+        "before_cycles": 146,
+        "after_cycles": 146,
+        "output_int32_sha256": "7eb6d2affadc95d3b542230c2379fe60d2d43260f8a90da9d7e4f1a92ef467c6"
+      },
+      {
+        "shape_hw_ci_co_k_s_p": [
+          23,
+          29,
+          17,
+          33,
+          1,
+          1,
+          0
+        ],
+        "verify": false,
+        "before_cycles": 22095,
+        "after_cycles": 18396,
+        "output_int32_sha256": "5fce1ad71ae825cd99eec1867e778b0912b59b94f0b276a38a25b71ac4f17856"
+      },
+      {
+        "shape_hw_ci_co_k_s_p": [
+          23,
+          29,
+          17,
+          33,
+          1,
+          2,
+          0
+        ],
+        "verify": false,
+        "before_cycles": 9933,
+        "after_cycles": 6660,
+        "output_int32_sha256": "52eb3127ee62dd3490025017d4f0952108fe1c2f78d8145bd7ca20c4a9371ea6"
+      },
+      {
+        "shape_hw_ci_co_k_s_p": [
+          23,
+          29,
+          17,
+          33,
+          3,
+          1,
+          1
+        ],
+        "verify": false,
+        "before_cycles": 62883,
+        "after_cycles": 57090,
+        "output_int32_sha256": "06a1ab9eaacfa9bc56669d74287da49504c9b2b74658f108dc202714db059dde"
+      },
+      {
+        "shape_hw_ci_co_k_s_p": [
+          23,
+          29,
+          17,
+          33,
+          3,
+          2,
+          1
+        ],
+        "verify": false,
+        "before_cycles": 22653,
+        "after_cycles": 17832,
+        "output_int32_sha256": "690cccf24e9c70fee2260bb340eae1c81448442c247f929262ba7b8bdfc0a165"
+      },
+      {
+        "shape_hw_ci_co_k_s_p": [
+          7,
+          9,
+          768,
+          17,
+          3,
+          2,
+          0
+        ],
+        "verify": false,
+        "before_cycles": 34590,
+        "after_cycles": 34590,
+        "output_int32_sha256": "efc99cc93597b2314bafbd9f6da7838a5ab55e00323817a11ebfbb51b68ba315"
+      },
+      {
+        "shape_hw_ci_co_k_s_p": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0
+        ],
+        "verify": false,
+        "before_cycles": 18,
+        "after_cycles": 18,
+        "output_int32_sha256": "904304d28ac791858b7c26f383f141db254f7f32a80534e2310e557ebccd0dd1"
+      },
+      {
+        "shape_hw_ci_co_k_s_p": [
+          17,
+          17,
+          3,
+          5,
+          3,
+          1,
+          1
+        ],
+        "verify": false,
+        "before_cycles": 3675,
+        "after_cycles": 3490,
+        "output_int32_sha256": "47bedf9f0619f1f01fe1bfa03a6eaa6e4f188c68e0a5c9e0029cba265d04114f"
+      },
+      {
+        "shape_hw_ci_co_k_s_p": [
+          3,
+          3,
+          8,
+          16,
+          3,
+          1,
+          1
+        ],
+        "verify": false,
+        "before_cycles": 146,
+        "after_cycles": 146,
+        "output_int32_sha256": "7eb6d2affadc95d3b542230c2379fe60d2d43260f8a90da9d7e4f1a92ef467c6"
+      }
+    ],
+    "scope": "same seeded nonzero tensors, bit-identical outputs and unchanged active/MAC cycles"
+  },
+  "activation_buffers": {
+    "banks": 2,
+    "words_per_bank": 24576,
+    "word_bits": 64,
+    "busy_write_rule": "only the inactive bank accepts writes; the NPU protects its active bank through final postprocess delivery"
+  },
+  "engineering_budget": {
+    "status": "PASS",
+    "drm36k_ceiling": 160,
+    "lut_ceiling": 40000,
+    "apm_ceiling": 640,
+    "scope": "repository NPU planning ceilings; not current integrated SoC free-resource measurements"
+  }
+}

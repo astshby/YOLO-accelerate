@@ -14,6 +14,8 @@ module npu_measure_top (
     timeunit 1ns;
     timeprecision 1ps;
     typedef struct packed {
+        logic act_wr_bank;
+        logic cmd_act_bank;
         logic act_wr_valid;
         logic [14:0] act_wr_addr;
         logic [63:0] act_wr_data;
@@ -78,6 +80,7 @@ module npu_measure_top (
 
     npu_conv128 u_npu (
         .clk, .rst,
+        .act_wr_bank(drive_q.act_wr_bank), .cmd_act_bank(drive_q.cmd_act_bank),
         .act_wr_valid(apply_q && drive_q.act_wr_valid), .act_wr_ready,
         .act_wr_addr(drive_q.act_wr_addr), .act_wr_data(drive_q.act_wr_data),
         .weight_wr_valid(apply_q && drive_q.weight_wr_valid), .weight_wr_ready,

@@ -1,0 +1,38 @@
+{
+  "schema": "npu128-uart-bulk-rejection-v1",
+  "status": "REJECTED_FRAMING_ISOLATION",
+  "reason": "A framing-damaged bulk payload executed an embedded CRC-valid legacy write before its outer CRC.",
+  "actual_act_data": "0xdeadbeef",
+  "expected_act_data": "0x11223344",
+  "candidate_rtl_sha256": "c69e411b99ddf2a522b79036972b9543897b615ba71015119bfd0db15e8868c2",
+  "counterexample_test_sha256": "be0672df5f8f6b2dacb1c9b337a0d8a02330b1b1783f4198411f790794d0131a",
+  "counterexample_log_sha256": "f710cf82714d93dcfd431bba9d3565a24b0daaabbcfa11aed0effce4237a0d1a",
+  "counterexample_metrics": {
+    "command": [
+      "python3",
+      "tb/check_uart_bulk_framing.py",
+      "--simulator",
+      "build/uart-bulk-a/board/Vnpu_uart_board"
+    ],
+    "returncode": 1,
+    "guard_stop": null,
+    "elapsed_seconds": 2.360166777012637,
+    "sampled_process_group_peak_rss_bytes": 25620480,
+    "minimum_linux_available_bytes": 14876319744,
+    "rss_limit_mib": 256,
+    "per_process_address_space_limit_mib": 512,
+    "linux_reserve_mib": 6144,
+    "cpu_affinity_count": 1,
+    "nice": 19,
+    "sampling_period_seconds": 0.05,
+    "limits": "RSS is sampled, not a cgroup hard limit; Windows memory is not measured here."
+  },
+  "initial_physical_project": "$PDS_WORK_ROOT/work/npu128-uart-bulk-20261026a",
+  "initial_manifest_sha256": "7e3590f181edf0faead230d75b5ff7fba92b56175538ca79040370ab8b04c5ee",
+  "disposition": "Original logs/netlist/routed DB preserved. No bitstream generated or programmed from this candidate. Superseded by receive-quarantine fix.",
+  "obsolete_gate_replay_stopped": [
+    167922
+  ],
+  "counterexample_source_snapshot": "build/bulk-framing-a/counterexample-original.py",
+  "counterexample_binary_sha256": "cd2d18b08ac2e6f7e5ede65c81f1b4064b090cc213bbd2de7037447dd96b3de7"
+}

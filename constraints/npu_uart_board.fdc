@@ -1,0 +1,36 @@
+# MES2L676-200HP v1.2: core 27 MHz oscillator, UART and KEY0 only.
+# UART RX -> first synchronizer FF; KEY0 -> reset-release FFs only.
+# These asynchronous port exceptions do NOT exclude any register-to-register path.
+create_clock -name {clk_27m} -period 37.037037 -waveform {0 18.5185185} [get_ports {clk_27m}]
+set_clock_uncertainty -setup 0.2 [get_clocks {clk_27m}]
+set_clock_uncertainty -hold 0.05 [get_clocks {clk_27m}]
+set_input_delay -clock [get_clocks {clk_27m}] -min 0 [get_ports {uart_rxd}]
+set_input_delay -clock [get_clocks {clk_27m}] -max 1 [get_ports {uart_rxd}]
+set_input_delay -clock [get_clocks {clk_27m}] -min 0 [get_ports {board_reset_n}]
+set_input_delay -clock [get_clocks {clk_27m}] -max 1 [get_ports {board_reset_n}]
+set_output_delay -clock [get_clocks {clk_27m}] -min 0 [get_ports {uart_txd}]
+set_output_delay -clock [get_clocks {clk_27m}] -max 1 [get_ports {uart_txd}]
+set_false_path -from [get_ports {uart_rxd}]
+set_false_path -from [get_ports {board_reset_n}]
+define_attribute {p:clk_27m} {PAP_IO_DIRECTION} {INPUT}
+define_attribute {p:clk_27m} {PAP_IO_LOC} {D18}
+define_attribute {p:clk_27m} {PAP_IO_VCCIO} {3.3}
+define_attribute {p:clk_27m} {PAP_IO_STANDARD} {LVCMOS33}
+define_attribute {p:clk_27m} {PAP_IO_NONE} {TRUE}
+define_attribute {p:board_reset_n} {PAP_IO_DIRECTION} {INPUT}
+define_attribute {p:board_reset_n} {PAP_IO_LOC} {C22}
+define_attribute {p:board_reset_n} {PAP_IO_VCCIO} {3.3}
+define_attribute {p:board_reset_n} {PAP_IO_STANDARD} {LVCMOS33}
+define_attribute {p:board_reset_n} {PAP_IO_NONE} {TRUE}
+define_attribute {p:uart_rxd} {PAP_IO_DIRECTION} {INPUT}
+define_attribute {p:uart_rxd} {PAP_IO_LOC} {B24}
+define_attribute {p:uart_rxd} {PAP_IO_VCCIO} {3.3}
+define_attribute {p:uart_rxd} {PAP_IO_STANDARD} {LVCMOS33}
+define_attribute {p:uart_rxd} {PAP_IO_NONE} {TRUE}
+define_attribute {p:uart_txd} {PAP_IO_DIRECTION} {OUTPUT}
+define_attribute {p:uart_txd} {PAP_IO_LOC} {C24}
+define_attribute {p:uart_txd} {PAP_IO_VCCIO} {3.3}
+define_attribute {p:uart_txd} {PAP_IO_STANDARD} {LVCMOS33}
+define_attribute {p:uart_txd} {PAP_IO_DRIVE} {8}
+define_attribute {p:uart_txd} {PAP_IO_NONE} {TRUE}
+define_attribute {p:uart_txd} {PAP_IO_SLEW} {SLOW}

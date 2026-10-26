@@ -24,7 +24,7 @@ public:
     std::mt19937 random{0x20261023};
     std::array<uint8_t,256> table=silu_table();
     uint64_t cycles=0, commands=0, pixels=0, errors=0, aborts=0, post_stalls=0;
-    Bench() { reset(); }
+    Bench() { d.act_wr_bank=0; d.cmd_act_bank=0; reset(); }
     void eval() { d.clk=0; d.eval(); }
     void tick() { eval(); d.clk=1; d.eval(); ++cycles; }
     void clear() { d.act_wr_valid=0; d.weight_wr_valid=0; d.cmd_valid=0; d.cfg_valid=0; d.out_ready=0; }

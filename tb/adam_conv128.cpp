@@ -1,5 +1,6 @@
 #include "Vadam_conv128.h"
 #include "verilated.h"
+#include "../software/adam128_cycle_model.h"
 #include <array>
 #include <cstdint>
 #include <iostream>
@@ -31,6 +32,7 @@ public:
     uint64_t cycles = 0, outputs = 0, convolutions = 0, resets = 0;
     Bench() : d{single_thread(context)} { clear_inputs(); reset(); }
     void clear_inputs() {
+        d.act_wr_bank = 0; d.cmd_act_bank = 0;
         d.cmd_valid = 0; d.act_wr_valid = 0; d.weight_wr_valid = 0; d.out_ready = 0;
     }
     void eval() { d.clk = 0; d.eval(); }
@@ -54,8 +56,9 @@ public:
             t.bias[oc] = pattern == 4 ? (oc & 1 ? 0x80000000u : 0x7fffffffu) : uint32_t(int(random()%20001)-10000);
         return t;
     }
-    void load(const Case& t) {
+    void load(const Case& t, unsigned bank=0) {
         clear_inputs(); require(!d.busy, "load while busy");
+        d.act_wr_bank=bank;
         for (int pixel = 0; pixel < t.w*t.h; ++pixel) {
             for (int group = 0; group < t.groups(); ++group) {
                 d.act_wr_data = 0;
@@ -93,8 +96,8 @@ public:
         d.cmd_kernel3=t.k==3; d.cmd_stride2=t.stride==2; d.cmd_pad=t.pad;
         for (int oc=0; oc<16; ++oc) d.cmd_bias[oc]=t.bias[oc];
     }
-    void start(const Case& t) {
-        clear_inputs(); descriptor(t); d.cmd_valid=1; eval();
+    void start(const Case& t, unsigned bank=0) {
+        clear_inputs(); d.act_wr_bank=bank; d.cmd_act_bank=bank; descriptor(t); d.cmd_valid=1; eval();
         require(d.cmd_ready, "command not accepted"); tick(); d.cmd_valid=0;
         require(d.busy && !d.cmd_error, "valid descriptor rejected");
     }
@@ -113,7 +116,8 @@ public:
         }
         return result;
     }
-    void finish(const Case& t, const std::vector<uint32_t>* full_image_reference=nullptr) {
+    void finish(const Case& t, const std::vector<uint32_t>* full_image_reference=nullptr, bool stalls=true) {
+        const uint64_t begin_cycles=cycles;
         const auto golden=full_image_reference ? *full_image_reference : reference(t);
         unsigned pixel=0, held_cycles=0, stall_cycles=0;
         std::array<uint32_t,16> held{};
@@ -125,8 +129,8 @@ public:
             // Busy-time writes/commands deliberately carry conflicting values.
             d.act_wr_valid=1; d.weight_wr_valid=1; d.cmd_valid=1;
             d.act_wr_data=0; d.cmd_width=0;
-            d.out_ready=(random()%4)!=0;
-            if (d.out_valid && pixel==0 && held_cycles<11) { d.out_ready=0; ++held_cycles; }
+            d.out_ready=!stalls || (random()%4)!=0;
+            if (stalls && d.out_valid && pixel==0 && held_cycles<128) { d.out_ready=0; ++held_cycles; }
             eval();
             require(d.busy && !d.cmd_ready && !d.act_wr_ready && !d.weight_wr_ready,
                     "busy accepted a writer or command");
@@ -161,12 +165,15 @@ public:
         clear_inputs(); eval();
         require(saw_done && pixel==count && !d.busy, "completion/timeout");
         require(d.perf_mac_steps==count*t.groups()*t.k*t.k, "incorrect issued MAC beat count");
-        require(d.perf_active_cycles==count*(t.groups()*t.k*t.k+8)+stall_cycles,
-                "unexpected pipeline/handshake cycle count");
+        require(d.perf_active_cycles==cycles-begin_cycles,"active cycle counter mismatch");
+        require(d.perf_active_cycles>=count*t.groups()*t.k*t.k+14,"pipeline shorter than data dependencies");
+        if (!stalls) require(d.perf_active_cycles==adam128_no_stall_cycles(count,t.groups()*t.k*t.k),
+                            "two-credit service-time recurrence mismatch");
+        else require(stall_cycles>=128,"long output stall not exercised");
         for (int i=0;i<9;++i) { tick(); require(!d.done && !d.out_valid, "stale completion/result"); }
         ++convolutions;
     }
-    void run(const Case& t) { load(t); start(t); finish(t); }
+    void run(const Case& t, bool stalls=true, unsigned bank=0) { load(t,bank); start(t,bank); finish(t,nullptr,stalls); }
     void tiled_image(int kernel, int stride) {
         // Cross both the 16x16 input-tile and 16-output-channel boundaries.
         // Golden outputs come from the untiled full image, not local tile convolution.
@@ -222,11 +229,11 @@ public:
     void aborts() {
         const auto t=make_case(5,4,17,13,3,1,1);
         load(t);
-        for (unsigned delay : {0u,1u,2u,5u,12u,30u,80u}) {
+        for (unsigned delay : {0u,1u,2u,3u,4u,5u,6u,7u,8u,9u,10u,11u,12u,13u,14u,15u,30u,80u}) {
             start(t);
             for (unsigned n=0;n<delay;++n) tick();
             reset();
-            for (int n=0;n<12;++n) { tick(); require(!d.out_valid && !d.done && !d.busy,"old transaction survived reset"); }
+            for (int n=0;n<20;++n) { tick(); require(!d.out_valid && !d.done && !d.busy,"old transaction survived reset"); }
             // RAM contents intentionally survive reset; a new command must recover.
             start(t); finish(t);
         }
@@ -242,6 +249,8 @@ int main(int argc, char** argv) {
         Bench b;
         b.context.commandArgs(argc,argv);
         b.invalid_commands();
+        for (int ci : {1,9,17,41,89,97,105,192,768})
+            b.run(b.make_case(16,16,ci,16,1,1,0),false);
         for (int k : {1,3}) for (int stride : {1,2}) for (int ci : {1,3,7,8,9,17,24})
             b.run(b.make_case(5,4,ci,(ci%2)?13:16,k,stride,k==3?1:0));
         b.run(b.make_case(1,1,1,1,3,1,1));
@@ -249,12 +258,16 @@ int main(int argc, char** argv) {
         b.run(b.make_case(16,16,8,16,1,1,0));
         b.run(b.make_case(16,16,24,16,3,2,1));
         b.run(b.make_case(16,16,768,16,3,1,1));
+        b.run(b.make_case(16,16,768,16,3,1,1),true,1); // bank 1, all 24,576 words and highest read address
+        // Cross both 8K segment boundaries with partially occupied input groups.
+        for (unsigned bank : {0u,1u}) for (int ci : {257,513})
+            b.run(b.make_case(16,16,ci,3,1,1,0),true,bank);
         for (int ci : {48,96,192,384,768}) b.run(b.make_case(3,3,ci,16,3,1,1));
         for (int pattern : {1,2,3,4}) b.run(b.make_case(3,3,768,16,3,1,1,pattern));
         for (int k : {1,3}) for (int stride : {1,2}) b.tiled_image(k,stride);
         b.aborts();
         std::cout << "PASS adam_conv128: " << b.convolutions << " convolutions, " << b.outputs
-                  << " output pixels, 4 stitched full-image cases, 9 invalid descriptors, 8 abort/recovery cases; cycles="
+                  << " output pixels, 4 stitched full-image cases, 9 invalid descriptors, 19 abort/recovery cases; cycles="
                   << b.cycles << "; MACs=128; seed=0x20261023\n";
         b.d.final();
     } catch (const std::exception& error) {

@@ -1,0 +1,45 @@
+{
+  "schema": "npu128-uart-host-functional-v1",
+  "status": "PASS",
+  "source_sha256": {
+    "tools/npu_uart.py": "8fc8052b41958d576f5ee2b53fb7c819c550f5ad7434d81068dc37101c77af52",
+    "tools/run_uart_board_test.py": "ae73efa6ed720f5743a966e8be8059a874fc1d1418e80dadcba4ab622a06c0f2",
+    "tb/check_serial_wire.py": "2877e3bdccaa1d23529253f73ac5712e49842f0e50fe4d181948065d578b6591",
+    "tools/run_uart_host_tests.py": "c005058cec385b5236e2b955ea4e2f8aabb8246fad60d0e1e59e1b4325093cff",
+    "tools/run_guarded.py": "0c3098fed4b23d1765a229dc39370fb8ec1b6701e525cdfae53bc8f060c7a84e"
+  },
+  "baseline_client_sha256": "e22b0a54a8fb48546b106ebb04bc822a7e11474715e8e19bd6a8bf1c259bbdf5",
+  "firmware_validation_sha256": "535dd1c14be0572ee7306c14822582b8dfb27641be1575c7ee5ccc2d1bff8e2f",
+  "unchanged_logic_ast_sha256": "515e1192317fda2dab8e97f605ecf94bf8dcee7801fc2dc497067e9d929d9b11",
+  "result": "test_complete_frame_returns_before_idle_timeout (check_serial_wire.SerialTests) ... ok\ntest_corrupt_and_stale_frame_then_good_reply (check_serial_wire.SerialTests) ... ok\ntest_corrupt_pop_reply_retries_identical_request (check_serial_wire.SerialTests) ... ok\ntest_exhausted_timeout_keeps_sequence_and_payload (check_serial_wire.SerialTests) ... ok\ntest_lost_start_reply_retries_identical_request (check_serial_wire.SerialTests) ... ok\ntest_mmio_error_is_not_reexecuted (check_serial_wire.SerialTests) ... ok\ntest_noise_and_header_split (check_serial_wire.SerialTests) ... ok\ntest_short_write_and_close (check_serial_wire.SerialTests) ... ok\ntest_split_frame (check_serial_wire.SerialTests) ... ok\n\n----------------------------------------------------------------------\nRan 9 tests in 0.003s\n\nOK\n",
+  "metrics": {
+    "command": [
+      "/usr/bin/python3",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tb",
+      "-p",
+      "check_serial_wire.py",
+      "-v"
+    ],
+    "returncode": 0,
+    "guard_stop": null,
+    "elapsed_seconds": 0.10680415100068785,
+    "sampled_process_group_peak_rss_bytes": 6643712,
+    "minimum_linux_available_bytes": 15640195072,
+    "rss_limit_mib": 256,
+    "per_process_address_space_limit_mib": 512,
+    "linux_reserve_mib": 6144,
+    "cpu_affinity_count": 1,
+    "nice": 19,
+    "sampling_period_seconds": 0.05,
+    "limits": "RSS is sampled, not a cgroup hard limit; Windows memory is not measured here."
+  },
+  "scope": "Physical serial reception only; codec, Client, scalar reference and simulator API unchanged by AST comparison.",
+  "limitations": [
+    "Timed serial-port model, not a physical-port performance result.",
+    "Firmware-era functional report remains immutable; no new RTL/PDS claim."
+  ]
+}

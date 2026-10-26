@@ -7,6 +7,7 @@
 #include <vector>
 
 struct Request {
+    bool act_bank=false, cmd_bank=false;
     bool act_valid=false, weight_valid=false, cfg_valid=false, cmd_valid=false, ready=false;
     unsigned act_addr=0, weight_addr=0, kind=0, cfg_addr=0, mode=0;
     uint64_t activation=0;
@@ -19,6 +20,7 @@ struct Request {
         auto push=[&](uint64_t value,unsigned width) {
             for (int i=int(width)-1;i>=0;--i) b.push_back((value>>i)&1);
         };
+        push(act_bank,1); push(cmd_bank,1);
         push(act_valid,1); push(act_addr,15); push(activation,64);
         push(weight_valid,1); push(weight_addr,10);
         for (int i=31;i>=0;--i) push(weight[i],32);
@@ -27,7 +29,7 @@ struct Request {
         push(k3,1); push(s2,1); push(pad,1);
         for (int i=15;i>=0;--i) push(bias[i],32);
         push(ready,1);
-        require(b.size()==1714,"scan input width"); return b;
+        require(b.size()==1716,"scan input width"); return b;
     }
 };
 
@@ -92,10 +94,25 @@ public:
         for (unsigned i=0;i<256;++i) { req.kind=2; req.cfg_addr=i; req.cfg_data=table[i]; send(req); }
         req.cfg_valid=false;
         auto loaded=capture(); require(loaded[4],"scan LUT loading");
-        auto execute=[&](unsigned count,unsigned mode,unsigned steps) {
+        auto execute=[&](unsigned count,unsigned mode,unsigned steps,bool preload=false) {
             req.co=count;
             req.cmd_valid=true; req.mode=mode; send(req); req.cmd_valid=false;
             for (int i=0;i<80;++i) tick();
+            if (preload) {
+                req.act_bank=true; req.act_valid=true;
+                for (int group=0;group<3;++group) {
+                    req.act_addr=group; req.activation=0;
+                    for (int lane=0;lane<8;++lane) {
+                        int ic=group*8+lane;
+                        uint8_t v=ic<17 ? uint8_t(int8_t((ic*7+5)%29-14)) : 0xa7;
+                        req.activation|=uint64_t(v)<<(lane*8);
+                    }
+                    send(req);
+                }
+                req.act_bank=false; req.act_addr=0; req.activation=~uint64_t(0); send(req);
+                req.act_valid=false;
+                auto protected_bank=capture(); require(!protected_bank[0],"scan active bank write protection");
+            }
             const auto output=capture();
             size_t cursor=9;
             auto get=[&](unsigned width) {
@@ -147,6 +164,61 @@ public:
         }
         req.weight_valid=false;
         for (unsigned mode=0;mode<3;++mode) execute(16,mode,27);
+        // Four distinct pixels held at each output: fill the result credits,
+        // pause the producer, then resume with one-cycle ready pulses.
+        req.k3=0; req.s2=0; req.pad=0; req.co=16;
+        auto point_weight=[](int oc,int ic) { return int8_t((oc*5+ic)%15-7); };
+        req.weight_valid=true;
+        for (int group=0;group<3;++group) {
+            req.weight_addr=group; req.weight.fill(0);
+            for (int oc=0;oc<16;++oc) for (int lane=0;lane<8;++lane) {
+                int ic=group*8+lane,byte=oc*8+lane;
+                uint8_t w=ic<17 ? uint8_t(point_weight(oc,ic)) : 0xa7;
+                req.weight[byte/4]|=uint32_t(w)<<(8*(byte%4));
+            }
+            send(req);
+        }
+        req.weight_valid=false;
+        for (int oc=0;oc<16;++oc) req.bias[oc]=uint32_t(oc*5-17);
+        for (unsigned mode=0;mode<3;++mode) {
+            req.mode=mode; req.cmd_valid=true; send(req); req.cmd_valid=false;
+            for (unsigned pixel=0;pixel<4;++pixel) {
+                for (int i=0;i<80;++i) tick();
+                auto output=capture(); size_t cursor=9;
+                auto get=[&](unsigned width) { uint64_t v=0; for(unsigned i=0;i<width;++i) v=(v<<1)|output[cursor++]; return v; };
+                require(output[7] && !output[8] && get(1)==1 && get(2)==mode,"multi-pixel status");
+                std::array<int32_t,16> expected{};
+                for (int oc=0;oc<16;++oc) {
+                    expected[oc]=int32_t(req.bias[oc]);
+                    for (int ic=0;ic<17;++ic) expected[oc]+=int(activation(pixel,ic))*int(point_weight(oc,ic));
+                }
+                for (int oc=15;oc>=0;--oc) require(uint32_t(get(32))==uint32_t(expected[oc]),"multi-pixel bias/dot");
+                for (int oc=15;oc>=0;--oc) {
+                    uint8_t q=uint8_t(requant_reference(expected[oc],19,5));
+                    require(get(8)==(mode==0 ? 0 : mode==2 ? table[q] : q),"multi-pixel quantization");
+                }
+                require(get(16)==0xffff && get(8)==pixel%2 && get(8)==pixel/2 && get(1)==(pixel==3),"multi-pixel order");
+                req.ready=true; send(req); req.ready=false;
+            }
+            auto completed=capture(); require(completed[8] && !completed[7] && !completed[9],"multi-pixel completion");
+        }
+        // Preload bank 1 during bank 0's stalled output, then consume bank 1.
+        // Re-run bank 0 afterwards to prove the rejected poison write did not land.
+        req.w=1; req.h=1;
+        auto bank_reference=[&](bool bank) {
+            for(int oc=0;oc<16;++oc) {
+                raw[oc]=int32_t(req.bias[oc]);
+                for(int ic=0;ic<17;++ic) {
+                    int8_t a=bank ? int8_t((ic*7+5)%29-14) : activation(0,ic);
+                    raw[oc]+=int(a)*int(point_weight(oc,ic));
+                }
+            }
+        };
+        for(unsigned mode=0;mode<3;++mode) {
+            req.cmd_bank=false; bank_reference(false); execute(16,mode,3,true);
+            req.cmd_bank=true; bank_reference(true); execute(16,mode,3);
+            req.cmd_bank=false; bank_reference(false); execute(16,mode,3);
+        }
         req.cmd_valid=true; req.mode=3; send(req);
         const auto invalid=capture(); require(invalid[6] && !invalid[7],"scan invalid command status");
     }
@@ -156,6 +228,6 @@ int main() {
     try {
         Bench b; b.test();
         std::cout<<"PASS npu_measure_top: "<<b.transactions
-                 <<" scan transactions, 1714 input/813 output bits, all 16 channel counts, three modes, 3x3/stride2/pad1/Ci17 and invalid command\n";
+                 <<" scan transactions, 1716 input/813 output bits, all 16 channel counts, three modes, 3x3/stride2/pad1/Ci17, four-pixel credit stalls, concurrent inactive-bank preloads/protected poison writes/bank switches and invalid command\n";
     } catch (const std::exception& e) { std::cerr<<"FAIL "<<e.what()<<'\n'; return 1; }
 }

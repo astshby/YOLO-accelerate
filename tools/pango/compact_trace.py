@@ -22,7 +22,7 @@ def compact(source, destination):
                 requests += 1
                 shift = 0
             elif enable:
-                shift = ((shift << 1) | din) & ((1 << 1714)-1)
+                shift = ((shift << 1) | din) & ((1 << 1716)-1)
             if capture:
                 if snapshot is not None:
                     raise ValueError('overlapping capture')

@@ -1,0 +1,37 @@
+# MES2L676-200HP: real 27 MHz reference and generated 100 MHz GPLL clock.
+# Raw RX is asynchronous; KEY0 and PLL LOCK only drive reset-release async pins.
+# No internal data, compute, or register-to-register path is excluded.
+create_clock -name {clk_27m} -period 37.037037 -waveform {0 18.5185185} [get_ports {clk_27m}]
+create_generated_clock -name {clk_100m} -source [get_ports {clk_27m}] -multiply_by 100 -divide_by 27 -duty_cycle 50 [get_pins {u_clock/u_gpll/CLKOUT0}]
+set_clock_uncertainty -setup 0.2 [get_clocks {clk_100m}]
+set_clock_uncertainty -hold 0.05 [get_clocks {clk_100m}]
+set_input_delay -clock [get_clocks {clk_100m}] -min 0 [get_ports {uart_rxd}]
+set_input_delay -clock [get_clocks {clk_100m}] -max 1 [get_ports {uart_rxd}]
+set_input_delay -clock [get_clocks {clk_100m}] -min 0 [get_ports {board_reset_n}]
+set_input_delay -clock [get_clocks {clk_100m}] -max 1 [get_ports {board_reset_n}]
+set_output_delay -clock [get_clocks {clk_100m}] -min 0 [get_ports {uart_txd}]
+set_output_delay -clock [get_clocks {clk_100m}] -max 1 [get_ports {uart_txd}]
+set_false_path -from [get_ports {uart_rxd}]
+set_false_path -from [get_ports {board_reset_n}]
+define_attribute {p:clk_27m} {PAP_IO_DIRECTION} {INPUT}
+define_attribute {p:clk_27m} {PAP_IO_LOC} {D18}
+define_attribute {p:clk_27m} {PAP_IO_VCCIO} {3.3}
+define_attribute {p:clk_27m} {PAP_IO_STANDARD} {LVCMOS33}
+define_attribute {p:clk_27m} {PAP_IO_NONE} {TRUE}
+define_attribute {p:board_reset_n} {PAP_IO_DIRECTION} {INPUT}
+define_attribute {p:board_reset_n} {PAP_IO_LOC} {C22}
+define_attribute {p:board_reset_n} {PAP_IO_VCCIO} {3.3}
+define_attribute {p:board_reset_n} {PAP_IO_STANDARD} {LVCMOS33}
+define_attribute {p:board_reset_n} {PAP_IO_NONE} {TRUE}
+define_attribute {p:uart_rxd} {PAP_IO_DIRECTION} {INPUT}
+define_attribute {p:uart_rxd} {PAP_IO_LOC} {B24}
+define_attribute {p:uart_rxd} {PAP_IO_VCCIO} {3.3}
+define_attribute {p:uart_rxd} {PAP_IO_STANDARD} {LVCMOS33}
+define_attribute {p:uart_rxd} {PAP_IO_NONE} {TRUE}
+define_attribute {p:uart_txd} {PAP_IO_DIRECTION} {OUTPUT}
+define_attribute {p:uart_txd} {PAP_IO_LOC} {C24}
+define_attribute {p:uart_txd} {PAP_IO_VCCIO} {3.3}
+define_attribute {p:uart_txd} {PAP_IO_STANDARD} {LVCMOS33}
+define_attribute {p:uart_txd} {PAP_IO_DRIVE} {8}
+define_attribute {p:uart_txd} {PAP_IO_NONE} {TRUE}
+define_attribute {p:uart_txd} {PAP_IO_SLEW} {SLOW}

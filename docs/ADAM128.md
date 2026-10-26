@@ -1,5 +1,10 @@
 # adamgallas 128 MAC 卷积后端
 
+> 当前双 bank 接口见 [PREFETCH128.md](PREFETCH128.md)，连续像素周期契约见 [THROUGHPUT128.md](THROUGHPUT128.md)。
+
+> 2026-10-24：`fpga/npu128-timing` 的地址与 MAC 流水已调整；本文件以下保留旧版说明。
+> 该流水化阶段每像素固定开销为 15 拍（旧版 8 拍），后续已由连续像素调度替代；历史验证见 [128 MAC 时序优化](TIMING128.md)。
+
 2026-10-23，用户确定采用 adamgallas、128 个并行 MAC，先通过 Verilator。
 本次完成的是**可装载 tile、独立执行卷积并返回 INT32 结果的计算后端**。
 它尚未连接 AXI/DDR/UART。现已通过 [图片联合仿真](IMAGE_SIM.md) 执行完整 YOLOX-Tiny 图，

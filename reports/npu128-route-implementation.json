@@ -1,0 +1,458 @@
+{
+  "schema": "npu128-routed-assessment-v1",
+  "date": "2026-10-24",
+  "status": "PASS",
+  "scope": "standalone scan harness with automatic diagnostic IO placement; no board pinout, CPU, DDR or PLL",
+  "source_branch": "fpga/npu128-timing",
+  "source_base_commit": "7b9e89410911ceb0c2a5b18091e42d6e6cb4b0f4",
+  "project": "$PDS_WORK_ROOT/work/npu128-route-20261024b",
+  "device": "PG2L200H-6IFBB676",
+  "parameters": {
+    "MAX_SIDE": 16,
+    "MAX_CIN": 768,
+    "MAC": 128,
+    "post_lanes": 4
+  },
+  "tool_version": "2025.2 build 211867",
+  "clock_period_ns": 10,
+  "source_sha256": {
+    "input/reference_syn.vm": "7852d276ee35e72fa7bc7c449f43741642fcfb5de1bd750ea7565ffe9a054a4d",
+    "input/baseline-synthesize.tcl": "4ed215b170116541e46adcdb510bd78fb6e49b05ac6a514ebe49fe56716dbf92",
+    "measurement.fdc": "c673fa7a5107dbfbaef3273619c3631ea4cc431b7539957479a73e0af766add0",
+    "input/synthesis-manifest.json": "aee4bffadfecdf9efb6ccb707820c94a24f79c4a67db6ca2d6a138b0545644df",
+    "input/synthesis-guard.json": "04bf410f982d55e984dc48cbd1941fac71e68913a18b9a71d89779f2111d1f33",
+    "input/netlist-validation.json": "910f325020a9b20876e8eddede0dd26d49c12688ca2efa6fcf9a800d3d397103",
+    "rtl/adam/adam_mul_pair.sv": "2b6e9e7837087efefe1bd12f9866d68219ec09fdbe2bd68925c1d7d03221f935",
+    "rtl/adam/adam_sdp_ram.sv": "20d2ca02713ea7eb826535a8ec7c9131c4b9ede0598b22b254f88d9e59043d0e",
+    "rtl/adam/adam_mac128.sv": "39ed2571e05469ff3247d943d7bdb05c3d71f447019a2134cfcb8dbfb1471b50",
+    "rtl/adam/adam_conv128.sv": "c0de377d148c58cef327528912ee8391c2cdfe003c4438eb6f0597bfae46fec8",
+    "rtl/npu/npu_postprocess.sv": "b4acb84b9d2fd6df3e529b4d30c31f8636a59f40ae9c6d9d1da26bc975b3afa8",
+    "rtl/npu/npu_conv128.sv": "4a214f19f23a42d81d534b645f0b024fe81545f4987e28af279210534bd50b7f",
+    "rtl/npu/npu_measure_top.sv": "dc2da1bbd156af6199156b129b58d3aeb3882a27c71f4d3a876d2f8de46b3020",
+    "tools/pango/stage_implementation.py": "ce121a90c7e3d9d52602aad8a434c4c659ea9d5ee4e736e446dd722a25c354bb",
+    "tools/pango/run_synthesis.ps1": "d7eaf198c735c925f5c83355bfa7a4d3471dd3160906e0ec78037627e9fc0379",
+    "tools/pango/GuardedJob.cs": "70dd42a153c8171629f78040b5bc6b4ee5319ff53076ef8459532215578c6e4e",
+    "implement.tcl": "45208e909184ef95b3fe9162dae825ee2f1de979aa71ca6512731adf1ca3c400"
+  },
+  "netlist_comparison": {
+    "status": "PASS",
+    "ignored_comment_prefixes": [
+      "// Generated",
+      "// SDC constraint :"
+    ],
+    "baseline_sha256": "7852d276ee35e72fa7bc7c449f43741642fcfb5de1bd750ea7565ffe9a054a4d",
+    "regenerated_sha256": "9b74aa34d3b587ab5fea87d4b169c2c2200b9db3c1facf77dc77e1b22300926a",
+    "canonical_sha256": "98686ff318c41f9f59917cad09002ae4104133fe909ef52c519e7571acd4302a",
+    "reference_functional_result": "Progress: 304 requests, 16 snapshots, 778 clocks\nProgress: 320 requests, 32 snapshots, 1014 clocks\nProgress: 336 requests, 48 snapshots, 1240 clocks\nProgress: 352 requests, 64 snapshots, 1466 clocks\nProgress: 368 requests, 80 snapshots, 1702 clocks\nProgress: 384 requests, 96 snapshots, 1928 clocks\nPASS mapped NPU transaction replay: 432 requests, 105 snapshots, 2205 clocks; only scan shifts and performance-counter comparison omitted"
+  },
+  "constraints": {
+    "byte_identical_to_baseline": true,
+    "sha256": "c673fa7a5107dbfbaef3273619c3631ea4cc431b7539957479a73e0af766add0",
+    "imported_commands": [
+      {
+        "Command": "create_clock -name clk -period 10 -waveform {0 5} [get_ports clk]"
+      },
+      {
+        "Command": "set_clock_uncertainty -setup 0.2 [get_clocks clk]"
+      },
+      {
+        "Command": "set_clock_uncertainty -hold 0.05 [get_clocks clk]"
+      },
+      {
+        "Command": "set_input_delay -clock [get_clocks clk] -min 0 [get_ports rst]"
+      },
+      {
+        "Command": "set_input_delay -clock [get_clocks clk] -max 1 [get_ports rst]"
+      },
+      {
+        "Command": "set_input_delay -clock [get_clocks clk] -min 0 [get_ports scan_shift]"
+      },
+      {
+        "Command": "set_input_delay -clock [get_clocks clk] -max 1 [get_ports scan_shift]"
+      },
+      {
+        "Command": "set_input_delay -clock [get_clocks clk] -min 0 [get_ports scan_update]"
+      },
+      {
+        "Command": "set_input_delay -clock [get_clocks clk] -max 1 [get_ports scan_update]"
+      },
+      {
+        "Command": "set_input_delay -clock [get_clocks clk] -min 0 [get_ports scan_capture]"
+      },
+      {
+        "Command": "set_input_delay -clock [get_clocks clk] -max 1 [get_ports scan_capture]"
+      },
+      {
+        "Command": "set_input_delay -clock [get_clocks clk] -min 0 [get_ports scan_din]"
+      },
+      {
+        "Command": "set_input_delay -clock [get_clocks clk] -max 1 [get_ports scan_din]"
+      },
+      {
+        "Command": "set_output_delay -clock [get_clocks clk] -min 0 [get_ports scan_dout]"
+      },
+      {
+        "Command": "set_output_delay -clock [get_clocks clk] -max 1 [get_ports scan_dout]"
+      }
+    ],
+    "clock_signals": [
+      {
+        "Driver_Pin_Name": "O",
+        "Clk_Source_Inst": "clk_ibuf",
+        "Clk_Inst_Name": "clkbufg_0",
+        "Net_Name": "ntclkbufg_0",
+        "Fanout": "10479"
+      }
+    ]
+  },
+  "routed_fmax": [
+    {
+      "Clock": "clk",
+      "Fmax": "102.1242MHz",
+      "Requested Frequency": "100.0000MHz",
+      "Slack": "0.208"
+    }
+  ],
+  "routed_setup": [
+    {
+      "Launch Clock": "clk",
+      "Capture Clock": "clk",
+      "WNS(ns)": "3.076",
+      "TNS(ns)": "0.000",
+      "Failing Endpoints": "0",
+      "Total Endpoints": "36541",
+      "corner": "fast"
+    },
+    {
+      "Launch Clock": "clk",
+      "Capture Clock": "clk",
+      "WNS(ns)": "0.208",
+      "TNS(ns)": "0.000",
+      "Failing Endpoints": "0",
+      "Total Endpoints": "36541",
+      "corner": "slow"
+    }
+  ],
+  "routed_hold": [
+    {
+      "Launch Clock": "clk",
+      "Capture Clock": "clk",
+      "WHS(ns)": "0.036",
+      "THS(ns)": "0.000",
+      "Failing Endpoints": "0",
+      "Total Endpoints": "36541",
+      "corner": "fast"
+    },
+    {
+      "Launch Clock": "clk",
+      "Capture Clock": "clk",
+      "WHS(ns)": "0.043",
+      "THS(ns)": "0.000",
+      "Failing Endpoints": "0",
+      "Total Endpoints": "36541",
+      "corner": "slow"
+    }
+  ],
+  "minimum_pulse_width": [
+    {
+      "Clock": "clk",
+      "WPWS": "4.345",
+      "TPWS": "0.000",
+      "Failing End Point": "0",
+      "Total End Point": "6703",
+      "corner": "fast"
+    },
+    {
+      "Clock": "clk",
+      "WPWS": "4.040",
+      "TPWS": "0.000",
+      "Failing End Point": "0",
+      "Total End Point": "6703",
+      "corner": "slow"
+    }
+  ],
+  "minimum_pulse_width_passes": true,
+  "routed_wns_ns": 0.208,
+  "routed_whs_ns": 0.036,
+  "unrouted_nets": 0,
+  "unrouted_count_evidence": "Unrouted nets at iteration 38 (0.220 sec): 0",
+  "check_timing": [
+    {
+      "Check": "no_clock",
+      "Number of Issues": "0"
+    },
+    {
+      "Check": "virtual_clock",
+      "Number of Issues": "1"
+    },
+    {
+      "Check": "unexpandable_clocks",
+      "Number of Issues": "0"
+    },
+    {
+      "Check": "no_input_delay",
+      "Number of Issues": "0"
+    },
+    {
+      "Check": "no_output_delay",
+      "Number of Issues": "0"
+    },
+    {
+      "Check": "partial_input_delay",
+      "Number of Issues": "0"
+    },
+    {
+      "Check": "partial_output_delay",
+      "Number of Issues": "0"
+    },
+    {
+      "Check": "io_min_max_delay_consistency",
+      "Number of Issues": "0"
+    },
+    {
+      "Check": "input_delay_assigned_to_clock",
+      "Number of Issues": "0"
+    },
+    {
+      "Check": "loops",
+      "Number of Issues": "0"
+    },
+    {
+      "Check": "latch_loops",
+      "Number of Issues": "0"
+    },
+    {
+      "Check": "latchs",
+      "Number of Issues": "0"
+    }
+  ],
+  "coverage_checks_pass": true,
+  "clock_routed_over_srb_warning": false,
+  "timing_report_directory": "prj_tasks/pnr_1/report_timing/report_db",
+  "resources": {
+    "npu_measure_top": {
+      "LUT": 5688.0,
+      "FF": 10203.0,
+      "APM": 82.0,
+      "DRM": 94.5
+    },
+    "u_npu(npu_conv128)": {
+      "LUT": 5268.0,
+      "FF": 5961.0,
+      "APM": 82.0,
+      "DRM": 94.5
+    },
+    "u_conv(adam_conv128)": {
+      "LUT": 3596.0,
+      "FF": 3849.0,
+      "APM": 66.0,
+      "DRM": 92.5
+    },
+    "u_post(npu_postprocess)": {
+      "LUT": 1585.0,
+      "FF": 2043.0,
+      "APM": 16.0,
+      "DRM": 2.0
+    }
+  },
+  "resource_report": "prj_tasks/pnr_1/place_route/report_db/route_opt_resource_utilization.db",
+  "worst_setup_path": {
+    "Slack": "0.208",
+    "Logic Levels": "2",
+    "High Fanout": "1",
+    "Start Point": "snapshot_q[812]/opit_0_L6Q_perm/CLK",
+    "End Point": "scan_dout",
+    "Exception": "",
+    "Launch Clock": "clk",
+    "Capture Clock": "clk",
+    "Clock Edges": "rise-rise",
+    "Clock Skew": "-4.846",
+    "Launch Clock Delay": "4.846",
+    "Capture Clock Delay": "0.000",
+    "Clock Pessimism Removal": "0.000",
+    "Requirement": "10.000",
+    "Data delay": "3.696",
+    "Logic delay": "3.358 (90.9%)",
+    "Route delay": "0.338 (9.1%)",
+    "corner": "slow"
+  },
+  "worst_hold_path": {
+    "Slack": "0.036",
+    "Logic Levels": "2",
+    "High Fanout": "1272",
+    "Start Point": "scan_update",
+    "End Point": "drive_q[1467]/opit_0/CE",
+    "Exception": "",
+    "Launch Clock": "clk",
+    "Capture Clock": "clk",
+    "Clock Edges": "rise-rise",
+    "Clock Skew": "2.935",
+    "Launch Clock Delay": "0.000",
+    "Capture Clock Delay": "2.935",
+    "Clock Pessimism Removal": "0.000",
+    "Requirement": "0.000",
+    "Data delay": "2.945",
+    "Logic delay": "0.518 (17.6%)",
+    "Route delay": "2.427 (82.4%)",
+    "corner": "fast"
+  },
+  "worst_internal_setup_among_reported": {
+    "Slack": "2.327",
+    "Logic Levels": "1",
+    "High Fanout": "16",
+    "Start Point": "u_npu/u_conv/u_activation_ram/mem_54/gopdrm_36k/CLKB[0]",
+    "End Point": "u_npu/u_conv/u_mac/g_output_pair[1].g_input_channel[6].u_mul_pair/N2/gopapm/Y[15]",
+    "Exception": "",
+    "Launch Clock": "clk",
+    "Capture Clock": "clk",
+    "Clock Edges": "rise-rise",
+    "Clock Skew": "-0.102",
+    "Launch Clock Delay": "4.681",
+    "Capture Clock Delay": "4.131",
+    "Clock Pessimism Removal": "0.448",
+    "Requirement": "10.000",
+    "Data delay": "7.019",
+    "Logic delay": "1.996 (28.4%)",
+    "Route delay": "5.023 (71.6%)",
+    "corner": "slow"
+  },
+  "reported_setup_paths": 200,
+  "reported_hold_paths": 200,
+  "memory_guard": {
+    "status": "PASS",
+    "before": {
+      "timestamp": "2026-10-24T10:36:53.7114541+08:00",
+      "available_bytes": 13633871872,
+      "free_commit_bytes": 16650362880
+    },
+    "job_limit_bytes": 3221225472,
+    "reserve_bytes": 6442450944,
+    "timeout_seconds": 1800,
+    "flow": "implementation",
+    "command": "\"F:\\pango\\PDS_2025.2-ads\\bin\\pds_shell.exe\" -work_dir \"F:\\pango-project\\work\\npu128-route-20261024b\" -project_name npu128_impl -file \"F:\\pango-project\\work\\npu128-route-20261024b\\implement.tcl\"",
+    "manifest_sha256": "cbc3a1f0b6b3ace26214eb81b84cfc5d223a9be7b37650280c17224efae2f035",
+    "peak_job_commit_bytes": 2221117440,
+    "minimum_available_bytes": 11445157888,
+    "minimum_free_commit_bytes": 13834752000,
+    "root_pid": 16128,
+    "exit_code": 0,
+    "elapsed_seconds": 1029.281
+  },
+  "route_run": true,
+  "board_run": false,
+  "bitstream_requested": false,
+  "raw_evidence_sha256": {
+    "guard-samples.jsonl": "76a1410a40bc79a88954fccc2205aab1ddf2e8b27deb8e4f1d37b89551e06b2a",
+    "guard.json": "1b2895ac8db95ced6533da38f7dfa0355214980b5454242bcc191670afc74c03",
+    "implementation.log": "85381974d32465ade8baca5b0807038d48fbd99c17f9a1b02175f07e64ab1b44",
+    "manifest.json": "cbc3a1f0b6b3ace26214eb81b84cfc5d223a9be7b37650280c17224efae2f035",
+    "npu128_impl.pds": "8aaf071dd3834025c4c33956daff7a2b8c7871bd00be70e500f89f6810766a4a",
+    "prj_tasks/pnr_1/device_map/npu_measure_top_map.adf": "2dd321f4dfe46e4547d74e0ed9579ce82a6968e5a2d9759d50a74d40e07667b6",
+    "prj_tasks/pnr_1/device_map/report_db/device_map_clock_signal.db": "cdbb8d2567762eaf2e204767093188f23c7ce58546106639b558eef64ab718a2",
+    "prj_tasks/pnr_1/device_map/report_db/device_map_high_fanout_singnal.db": "a02062cac33719e44cb8a9e517a532257e0eec6fc0d80aa3eabf02c7d1258ee0",
+    "prj_tasks/pnr_1/device_map/report_db/device_map_messages.db": "1b4cee3d6ed4626a2d7786fb7754fd4bf809270afd325910fa3db576ad104cf7",
+    "prj_tasks/pnr_1/device_map/report_db/device_map_pinout_report.db": "34ca8981b95ac7539aa99af0c4ae90e0f81a03ef09ae4a4bc09661340cd8ad42",
+    "prj_tasks/pnr_1/device_map/report_db/device_map_reset_signal.db": "b3a8ff67a498901ad06cf7a8cc226d0f286b738ea97353a0a19e7702723b0c88",
+    "prj_tasks/pnr_1/device_map/report_db/device_map_resource_usage.db": "44ec8fcd9e32c4e354add7045b2387318b5f2489062e8be58a35a000e07be334",
+    "prj_tasks/pnr_1/device_map/report_db/device_map_runtime.db": "5dd3b5bb95edb2c55436e071fc677b07838ec78a349f33c972e149fa4a200e12",
+    "prj_tasks/pnr_1/device_map/report_db/device_map_settings.db": "2141a0f73def9e8ecf6a55aef75e54964503a7adaa0a356c0207d99776e74ecf",
+    "prj_tasks/pnr_1/device_map/report_db/device_map_timing_constraint.db": "3f9ea117124bc736a237bd378f06e96c173bcfbaf96872b0515e4fb58b915620",
+    "prj_tasks/pnr_1/device_map/run.log": "1d4f8a0a382392ddc6072b55fd40b906b1ad21a82aef988b48cc4077891b153b",
+    "prj_tasks/pnr_1/place_route/npu_measure_top_plc.adf": "9ffdd7e2baa7f82e325bad8e92bac982aae68e5bc5ea1ac2f40e269afb0ac30d",
+    "prj_tasks/pnr_1/place_route/npu_measure_top_pnr.adf": "5f322d6fc85c57cbea7fba60c600415b601c4936b0baeba912a5eb0d3324574e",
+    "prj_tasks/pnr_1/place_route/npu_measure_top_route.adf": "ca79d6c9d8004399099253e81551ca7c82306fa0add18e37d0a16b9c835bbd8c",
+    "prj_tasks/pnr_1/place_route/report_db/place__clock_summary.db": "d84ed3808b10cdcabc0c0ecfba621949787b1d2c761d2ea621800bf407b2302e",
+    "prj_tasks/pnr_1/place_route/report_db/place_congestion.db": "eb5c6464c74871d4617a7347579f79dde48b78b40f0006d899e08e0bf96cd511",
+    "prj_tasks/pnr_1/place_route/report_db/place_io_report.db": "b4c17345166d39a84f1cd1b32bc2d3bbd5a62624c9f8e87740d5d44ed6a4866d",
+    "prj_tasks/pnr_1/place_route/report_db/place_messages.db": "a2ac0389b8c7719a72c62f441c07d974d8601839dfd17df7fb7a3b74c0de4db5",
+    "prj_tasks/pnr_1/place_route/report_db/place_pinout_report.db": "c585d903d310a95bb52c01ef3540ba89bc2040f51477c39f5d771cf5fff74f88",
+    "prj_tasks/pnr_1/place_route/report_db/place_resource_usage.db": "298828ef814d0465c010188e47d1ed98abc1b4853b487cd45b8239f25bc6498f",
+    "prj_tasks/pnr_1/place_route/report_db/place_resource_utilization.db": "064aa9ebf0a0cb351e1b0fc0aa45bc7f1cdebdf070c98eb6ab5ab381a49706e0",
+    "prj_tasks/pnr_1/place_route/report_db/place_runtime.db": "51b76343d02633600d919396297654914fddbb6d1513a77cf5dc15398b0f9d87",
+    "prj_tasks/pnr_1/place_route/report_db/place_settings.db": "9c4987ec61faec6e55c79d73c40a6b36855f97c1f9578b681c4b56e6a2eb5059",
+    "prj_tasks/pnr_1/place_route/report_db/route__clock_summary.db": "9d6f04187f6e563d75d9e5c0e74b6112ad1e457974f0f1091c3c715433354f5c",
+    "prj_tasks/pnr_1/place_route/report_db/route_congestion.db": "c5565802d38e0e1a90095540202c22c7298e6c4470a5e13d5047a6e799fa4382",
+    "prj_tasks/pnr_1/place_route/report_db/route_io_report.db": "35c973b82bab678c488c26d41ac7d8892dabd1c52648b52f3227c7eda66e99ba",
+    "prj_tasks/pnr_1/place_route/report_db/route_messages.db": "d57cd9c1f596ac83d9435a42daa738ebb39935978b5cea6c238e5c562b7c38a1",
+    "prj_tasks/pnr_1/place_route/report_db/route_opt_clock_summary.db": "ba12bf211a0ee78880cf871efcdc5499972e63e3366bd63f61e26a3204c4f202",
+    "prj_tasks/pnr_1/place_route/report_db/route_opt_io_report.db": "511ca841f4860c9effab84fbd75e6902c292ef9b39bb793621fb6934e236c4a6",
+    "prj_tasks/pnr_1/place_route/report_db/route_opt_pinout_report.db": "ca2338ba91f5e67bb921c7a6ce4d356b814ffd400167c89c8a1f668b29163beb",
+    "prj_tasks/pnr_1/place_route/report_db/route_opt_resource_usage.db": "9bfebd39713218f8e8881f8ca4fa7ff7f73fd283ff9e791f38e67a9589b50c73",
+    "prj_tasks/pnr_1/place_route/report_db/route_opt_resource_utilization.db": "ab57e850618b2bbe4f9cb7953894b709e68a1af9f287a8f11cfcd169e0489817",
+    "prj_tasks/pnr_1/place_route/report_db/route_optimize_messages.db": "ecb971253290b7f93703c8b4c6bbcb83994e56cefce2c02e911d44258cf3deeb",
+    "prj_tasks/pnr_1/place_route/report_db/route_optimize_runtime.db": "0f196d7509f9f5cb08e6e469b662d058a6d36544429b55749afda42b1ece6348",
+    "prj_tasks/pnr_1/place_route/report_db/route_optimize_settings.db": "3a789fad8df69e3bd9344737b5f72d6c8c92c0241e3d8589a2396c39dc4dfaf2",
+    "prj_tasks/pnr_1/place_route/report_db/route_pinout_report.db": "013ee6ca86efc4cdf07830c64fcba7f2ac5adad665e17bd9e43e520a037fad42",
+    "prj_tasks/pnr_1/place_route/report_db/route_resource_usage.db": "e25c461c858de9a6b82e9408251c44460e6e228e15d142e7f78f2303787c6394",
+    "prj_tasks/pnr_1/place_route/report_db/route_resource_utilization.db": "7a886951f4ad745cee6dc0857543ec6858492674f683122886b4dc3773f493a8",
+    "prj_tasks/pnr_1/place_route/report_db/route_runtime.db": "591a38cd451652a63821124c476c35d44382bd1a764cb1062527a4a69600518b",
+    "prj_tasks/pnr_1/place_route/report_db/route_settings.db": "c960120b4e10aa8a97351217d6bedc188ba7e812e79dca6fe648692b17165ae2",
+    "prj_tasks/pnr_1/place_route/run_place.log": "2c046d2b983c207a35cc983e6457b138350fd4a06c804e4adbf4df416540a3bb",
+    "prj_tasks/pnr_1/place_route/run_route.log": "1ad12fe7aa8b47a19aee3c01456b336eac3bf34d83d6737433adae14ac49c852",
+    "prj_tasks/pnr_1/place_route/run_route_optimize.log": "499c28df615c390b1185ceff1d050cc684a9d4421997dba0c6cd49809655e513",
+    "prj_tasks/pnr_1/report_timing/npu_measure_top_rtp.adf": "a2779ad162005651fe5ef370b0dbf49b627e91ea112fecba7b8c2535e1b55df4",
+    "prj_tasks/pnr_1/report_timing/report_db/check_timing_summary.db": "9d962ba05dbde578aed182beb461c648a34e10ce7dbc4e9f722beafa2faff4d2",
+    "prj_tasks/pnr_1/report_timing/report_db/logic_level_distribution.db": "b817e34ef5ca920ed826820471eda18662b063156b7618bbc14ee36da0ad2f23",
+    "prj_tasks/pnr_1/report_timing/report_db/report_clock_interaction.db": "a9cc2ccdf5e82d50bbd5e4d70e54177c870c921b51a03fdaaa08950359af4d12",
+    "prj_tasks/pnr_1/report_timing/report_db/report_clock_network_fast.db": "1491ab68797b487db51c2aaa97bf69a77ed1311b2a821d30b50c0cd8afd1b5ac",
+    "prj_tasks/pnr_1/report_timing/report_db/report_clock_network_slow.db": "df3bb366a4da339b094fec80cba0099e0bf51348ee46739e74daba8d77ab116b",
+    "prj_tasks/pnr_1/report_timing/report_db/report_timing_clock_summary.db": "9af9fcb4531084148a721736051c7e358c77051e9f31ac343d5c6f003436d09c",
+    "prj_tasks/pnr_1/report_timing/report_db/report_timing_fast_hold.db": "c41339b8a8e3683631ffe3dc2646f57b119ffb9eac56f798b4bfe72b6e8ce185",
+    "prj_tasks/pnr_1/report_timing/report_db/report_timing_fast_mpw.db": "0f92e00c91a53376aa43acb43ed89eceab46b193160390640e4cb63d7d65798a",
+    "prj_tasks/pnr_1/report_timing/report_db/report_timing_fast_path_hold.db": "dc3afc831e8585b0b9df0e34cb171fcf28cba200cd47493c6d82134b8aad533d",
+    "prj_tasks/pnr_1/report_timing/report_db/report_timing_fast_path_mpw.db": "c5110ffc6f01d8434e4c807a2c5d9ae9d724e26a84b84e9e608ac2d8e914e75d",
+    "prj_tasks/pnr_1/report_timing/report_db/report_timing_fast_path_setup.db": "53d3f70e5c6449738f4b8587d9c988a4db6a13be492ba057e34b211afe140b5e",
+    "prj_tasks/pnr_1/report_timing/report_db/report_timing_fast_setup.db": "246f7eddda61d9304e9ca4346479043a9d35283fb04f92362473be8c1e4b1419",
+    "prj_tasks/pnr_1/report_timing/report_db/report_timing_fmax.db": "88c6a4ea4135b803134ddc9bd9dc09568010a026a200a1b355fec1c394b2c4da",
+    "prj_tasks/pnr_1/report_timing/report_db/report_timing_messages.db": "fc8db5745bb108cbb5a1e229a42aaaed702a426a3f9fc7daa1f1d6b9a7cd62bd",
+    "prj_tasks/pnr_1/report_timing/report_db/report_timing_runtime.db": "ac7bd6b2d830a8505e9174cc4f59749ff2f47b0e48936484add9b89ad481305e",
+    "prj_tasks/pnr_1/report_timing/report_db/report_timing_settings.db": "43ea3c8fff0852edd12fc888da09630b2618c51d1f12f15b1ef8916766e64a0b",
+    "prj_tasks/pnr_1/report_timing/report_db/report_timing_slow_hold.db": "b6371b12e58a51642a89c0b994e1b60d03e192d600cbe9b680d5570dddd4bd43",
+    "prj_tasks/pnr_1/report_timing/report_db/report_timing_slow_mpw.db": "2d6be835779451961f09ce60b8c4097439e01598017d25c8d0e9d9420aa08e4f",
+    "prj_tasks/pnr_1/report_timing/report_db/report_timing_slow_path_hold.db": "7aed51f0cc1b635a32411b3ca877875576c4238fe83122171da50dfe3561eeb5",
+    "prj_tasks/pnr_1/report_timing/report_db/report_timing_slow_path_mpw.db": "f82bcfd09949c832eecd94134c6b0ce108be2848ccaf600d8d7f99250e053928",
+    "prj_tasks/pnr_1/report_timing/report_db/report_timing_slow_path_setup.db": "af052f3f3ecc5d190959201654cb021d502cd6133017946c9b53456a528dad98",
+    "prj_tasks/pnr_1/report_timing/report_db/report_timing_slow_setup.db": "277a8b1fe06c45b467e173d1bc7505ecf45cfcf5f3c99c6e30a3f9f26ee914b8",
+    "prj_tasks/pnr_1/report_timing/run.log": "325ed2d7b219393f432912c8b0b0898b280af9d6389c16dcff7b650542ff02b5",
+    "prj_tasks/syn_1/synthesize/npu_measure_top_syn.vm": "9b74aa34d3b587ab5fea87d4b169c2c2200b9db3c1facf77dc77e1b22300926a"
+  },
+  "limitations": [
+    "Standalone automatically placed diagnostic IO; no board pin assignment.",
+    "No CPU/DDR/PLL integration, board test, or post-route SDF simulation.",
+    "Fmax is a tool timing estimate for this constrained harness, not a measured board frequency."
+  ],
+  "rejected_attempts": [
+    {
+      "project": "$PDS_WORK_ROOT/work/npu128-route-20261024a",
+      "guard": {
+        "status": "FAIL",
+        "before": {
+          "timestamp": "2026-10-24T10:35:01.5811163+08:00",
+          "available_bytes": 14073880576,
+          "free_commit_bytes": 17094475776
+        },
+        "job_limit_bytes": 3221225472,
+        "reserve_bytes": 6442450944,
+        "timeout_seconds": 1800,
+        "flow": "implementation",
+        "command": "\"F:\\pango\\PDS_2025.2-ads\\bin\\pds_shell.exe\" -work_dir \"F:\\pango-project\\work\\npu128-route-20261024a\" -project_name npu128_impl -file \"F:\\pango-project\\work\\npu128-route-20261024a\\implement.tcl\"",
+        "manifest_sha256": "3eb3c66452790914f0c5cd91f47a88214b504dbc62a61ae6446542574e79e8ee",
+        "peak_job_commit_bytes": 189898752,
+        "minimum_available_bytes": 13911306240,
+        "minimum_free_commit_bytes": 16945639424,
+        "root_pid": 3772,
+        "exit_code": 1,
+        "reason": "PDS exited with 1; inspect implementation.log.",
+        "elapsed_seconds": 5.776
+      },
+      "errors": [
+        "E: Flow-0150: Unsupported file format when Synplify is not specified. Please use the {(null)} files or switch the synthesize tool."
+      ],
+      "sha256": {
+        "manifest.json": "3eb3c66452790914f0c5cd91f47a88214b504dbc62a61ae6446542574e79e8ee",
+        "guard.json": "4d45ecd85c584019c84da606402bf4272c2b76fb2e8787aa79c6ececb0613370",
+        "implementation.log": "1081742aaa1b586e445c5d0b0047315e3f7ea0ff43449662625e864c5681675b"
+      }
+    }
+  ]
+}

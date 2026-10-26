@@ -17,7 +17,8 @@ module adam_mac128 (
 );
     timeunit 1ns;
     timeprecision 1ps;
-    logic [4:0] valid_q, last_q;
+    localparam int LATENCY = 7;
+    logic [LATENCY-1:0] valid_q, last_q;
     logic signed [15:0] product [16][8];
 
     for (genvar oc_pair = 0; oc_pair < 8; oc_pair++) begin : g_output_pair
@@ -38,10 +39,12 @@ module adam_mac128 (
         logic signed [17:0] sum4 [2];
         logic signed [18:0] sum8;
         for (genvar j = 0; j < 4; j++) begin : g_sum2
-            assign sum2[j] = 17'(product[oc][j*2]) + 17'(product[oc][j*2+1]);
+            always_ff @(posedge clk)
+                sum2[j] <= 17'(product[oc][j*2]) + 17'(product[oc][j*2+1]);
         end
         for (genvar j = 0; j < 2; j++) begin : g_sum4
-            assign sum4[j] = 18'(sum2[j*2]) + 18'(sum2[j*2+1]);
+            always_ff @(posedge clk)
+                sum4[j] <= 18'(sum2[j*2]) + 18'(sum2[j*2+1]);
         end
         assign sum8 = 19'(sum4[0]) + 19'(sum4[1]);
         always_ff @(posedge clk) begin
@@ -49,16 +52,17 @@ module adam_mac128 (
         end
     end
 
-    // 乘法四拍，求和一拍；无效拍可以流过数据寄存器，但不能进入累加器。
+    // Four multiplier edges, then one edge per adder-tree level. II remains one.
+    // Data registers need no reset: valid/last flush all seven stages together.
     always_ff @(posedge clk) begin
         if (rst) begin
             valid_q <= '0;
             last_q <= '0;
         end else begin
-            valid_q <= {valid_q[3:0], in_valid};
-            last_q <= {last_q[3:0], in_last && in_valid};
+            valid_q <= {valid_q[LATENCY-2:0], in_valid};
+            last_q <= {last_q[LATENCY-2:0], in_last && in_valid};
         end
     end
-    assign out_valid = valid_q[4];
-    assign out_last = last_q[4] && valid_q[4];
+    assign out_valid = valid_q[LATENCY-1];
+    assign out_last = last_q[LATENCY-1] && out_valid;
 endmodule

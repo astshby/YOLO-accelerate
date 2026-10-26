@@ -28,6 +28,7 @@ def main():
                'source_sha256': {}, 'results': []}
     cases = [('post', 'npu_postprocess', [ADAM[1], NPU[0]], 'tb/npu_postprocess.cpp'),
              ('conv', 'npu_conv128', ADAM + NPU, 'tb/npu_conv128.cpp'),
+             ('prefetch', 'npu_conv128', ADAM + NPU, 'tb/npu_prefetch.cpp'),
              ('measure', 'npu_measure_top', ADAM + NPU + ['rtl/npu/npu_measure_top.sv'],
               'tb/npu_measure_top.cpp')]
 
@@ -47,7 +48,8 @@ def main():
         compilation = guarded(f'{name}-build', command)
         run = guarded(f'{name}-run', [str(build/name/f'V{top}')])
         log = (build/f'{name}-run.log').read_text().strip()
-        if not log.startswith(f'PASS {top}:'):
+        marker = 'npu_prefetch' if name == 'prefetch' else top
+        if not log.startswith(f'PASS {marker}:'):
             raise RuntimeError(f'missing PASS marker: {name}')
         print(log)
         summary['results'].append({'test': name, 'result': log, 'build': compilation, 'run': run})

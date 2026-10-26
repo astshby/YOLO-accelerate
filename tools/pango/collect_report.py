@@ -70,15 +70,19 @@ def main():
     log = (project/'synthesis.log').read_text(errors='replace')
     version = re.search(r'version ([^)]+)', log).group(1)
     guard['command'] = 'pds_shell.exe -work_dir "$PROJECT" -project_name npu128_post -file "$PROJECT/synthesize.tcl"'
+    setup = table(db/'synthesize_report_timing_setup.db')
+    setup_passes = all(float(row['WNS(ns)']) >= 0 for row in setup) and bool(setup)
+    frequency_mhz = 1000 / manifest['clock_period_ns']
     report = {'schema': 'npu128-synthesis-assessment-v1', 'date': guard['before']['timestamp'][:10],
               'source_branch': manifest['source_branch'], 'source_base_commit': manifest['source_base_commit'],
               'baseline_tag': manifest['baseline_tag'], 'source_sha256': manifest['files'],
               'project': manifest['project'], 'device': manifest['device'], 'tool_version': version,
               'parameters': manifest['parameters'], 'clock_period_ns': manifest['clock_period_ns'],
-              'scope': manifest['scope'], 'status': 'synthesis completed; 100 MHz timing fails',
+              'scope': manifest['scope'],
+              'status': f'synthesis completed; estimated setup {"passes" if setup_passes else "fails"} at {frequency_mhz:g} MHz',
               'resources': resources, 'cell_usage': table(db/'synthesize_resource_usage.db'),
               'estimated_fmax': table(db/'synthesize_report_timing_fmax.db'),
-              'estimated_setup': table(db/'synthesize_report_timing_setup.db'),
+              'estimated_setup': setup,
               'estimated_hold': table(db/'synthesize_report_timing_hold.db'),
               'check_timing': table(db/'synthesize_check_timing_summary.db'),
               'worst_setup_path': paths[0], 'worst_path_resources': [v for v in path_cells if v],

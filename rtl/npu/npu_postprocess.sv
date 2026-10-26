@@ -40,14 +40,17 @@ module npu_postprocess (
     logic [30:0] multiplier_q [16];
     logic [5:0] shift_q [16];
     logic [1:0] issue_group_q;
-    logic [3:0] valid_q;
-    logic [1:0] group_q0, group_q1, group_q2, group_q3;
-    logic [3:0] mask_q0, mask_q1, mask_q2, mask_q3;
+    localparam int POST_STAGES = 6;
+    logic [POST_STAGES-1:0] valid_q;
+    logic [1:0] group_q [POST_STAGES];
+    logic [3:0] mask_q [POST_STAGES];
     logic signed [31:0] value_q0 [4];
     logic [30:0] multiplier_q0 [4];
-    logic [5:0] shift_q0 [4], shift_q1 [4];
+    logic [5:0] shift_q0 [4], shift_q1 [4], shift_q2 [4];
     logic signed [62:0] product_q1 [4];
-    logic [7:0] quantized_q2 [4], bypass_q3 [4], lut_value [4];
+    logic [62:0] magnitude_q2 [4], shifted_q3 [4];
+    logic negative_q2 [4], negative_q3 [4], round_q3 [4];
+    logic [7:0] quantized_q4 [4], bypass_q5 [4], lut_value [4];
 
     assign busy = state_q != IDLE;
     assign cfg_ready = !rst && !busy;
@@ -96,24 +99,22 @@ module npu_postprocess (
         end
     end
 
-    function automatic logic [7:0] requantize(
-        input logic signed [62:0] product,
-        input logic [5:0] right_shift
+    function automatic logic [7:0] saturate_rounded(
+        input logic [62:0] shifted,
+        input logic round_up,
+        input logic negative
     );
-        logic [63:0] magnitude, rounded, shifted;
+        logic [7:0] rounded;
         begin
-            // |INT32 * UINT31| <= 2^62-2^31，含最大舍入项也不会溢出 64 位。
-            magnitude = product[62] ? (~{product[62], product} + 64'd1) : {1'b0, product};
-            if (right_shift == 0) rounded = magnitude;
-            else rounded = magnitude + (64'd1 << (right_shift - 6'd1));
-            shifted = rounded >> right_shift;
-            // 最近整数，恰好半值时远离零；最后饱和至 signed INT8。
-            if (product[62]) begin
-                if (shifted >= 64'd128) requantize = 8'h80;
-                else requantize = 8'd0 - shifted[7:0];
+            // floor(m / 2^s) plus bit s-1 is exactly nearest, ties away from zero.
+            // Clamp the wide quotient before an eight-bit increment/sign restore.
+            rounded = shifted[7:0] + {7'b0, round_up};
+            if (negative) begin
+                if (shifted >= 63'd128) saturate_rounded = 8'h80;
+                else saturate_rounded = 8'd0 - rounded;
             end else begin
-                if (shifted > 64'd127) requantize = 8'h7f;
-                else requantize = shifted[7:0];
+                if (shifted >= 63'd127) saturate_rounded = 8'h7f;
+                else saturate_rounded = rounded;
             end
         end
     endfunction
@@ -123,10 +124,10 @@ module npu_postprocess (
         adam_sdp_ram #(.WIDTH(8), .DEPTH(256), .ADDR_W(8)) u_lut (
             .clk,
             .wr_en(lut_write), .wr_addr(cfg_addr), .wr_data(cfg_data[7:0]),
-            .rd_en(valid_q[2] && out_mode == 2'd2),
-            .rd_addr(quantized_q2[lane]), .rd_data(lut_value[lane])
+            .rd_en(valid_q[4] && out_mode == 2'd2),
+            .rd_addr(quantized_q4[lane]), .rd_data(lut_value[lane])
         );
-        // 操作数选择、乘法、舍入/饱和和查表各有寄存器边界。
+        // Select -> multiply -> magnitude -> shift/guard -> clamp -> LUT.
         // group 先补零再转 int，避免 ADS 将 2/3 当成负索引。
         always_ff @(posedge clk) begin
             if (state_q == ISSUE) begin
@@ -136,8 +137,14 @@ module npu_postprocess (
             end
             product_q1[lane] <= value_q0[lane] * $signed({1'b0, multiplier_q0[lane]});
             shift_q1[lane] <= shift_q0[lane];
-            quantized_q2[lane] <= requantize(product_q1[lane], shift_q1[lane]);
-            bypass_q3[lane] <= quantized_q2[lane];
+            magnitude_q2[lane] <= product_q1[lane][62] ? (~product_q1[lane] + 63'd1) : product_q1[lane];
+            negative_q2[lane] <= product_q1[lane][62];
+            shift_q2[lane] <= shift_q1[lane];
+            shifted_q3[lane] <= magnitude_q2[lane] >> shift_q2[lane];
+            round_q3[lane] <= shift_q2[lane] != 0 && magnitude_q2[lane][shift_q2[lane] - 6'd1];
+            negative_q3[lane] <= negative_q2[lane];
+            quantized_q4[lane] <= saturate_rounded(shifted_q3[lane], round_q3[lane], negative_q3[lane]);
+            bypass_q5[lane] <= quantized_q4[lane];
         end
     end
 
@@ -146,14 +153,10 @@ module npu_postprocess (
             state_q <= IDLE;
             valid_q <= '0;
             issue_group_q <= '0;
-            group_q0 <= '0;
-            group_q1 <= '0;
-            group_q2 <= '0;
-            group_q3 <= '0;
-            mask_q0 <= '0;
-            mask_q1 <= '0;
-            mask_q2 <= '0;
-            mask_q3 <= '0;
+            for (int stage = 0; stage < POST_STAGES; stage++) begin
+                group_q[stage] <= '0;
+                mask_q[stage] <= '0;
+            end
             out_mode <= '0;
             out_raw <= '0;
             out_int8 <= '0;
@@ -162,23 +165,21 @@ module npu_postprocess (
             out_y <= '0;
             out_last <= 1'b0;
         end else begin
-            valid_q <= {valid_q[2:0], state_q == ISSUE};
-            group_q0 <= issue_group_q;
-            group_q1 <= group_q0;
-            group_q2 <= group_q1;
-            group_q3 <= group_q2;
-            mask_q0 <= out_mask[int'({1'b0, issue_group_q})*4 +: 4];
-            mask_q1 <= mask_q0;
-            mask_q2 <= mask_q1;
-            mask_q3 <= mask_q2;
-            if (valid_q[3]) begin
+            valid_q <= {valid_q[POST_STAGES-2:0], state_q == ISSUE};
+            group_q[0] <= issue_group_q;
+            mask_q[0] <= out_mask[int'({1'b0, issue_group_q})*4 +: 4];
+            for (int stage = 1; stage < POST_STAGES; stage++) begin
+                group_q[stage] <= group_q[stage-1];
+                mask_q[stage] <= mask_q[stage-1];
+            end
+            if (valid_q[POST_STAGES-1]) begin
                 for (int lane = 0; lane < 4; lane++) begin
-                    if (!mask_q3[lane]) out_int8[(int'({1'b0, group_q3})*4+lane)*8 +: 8] <= '0;
+                    if (!mask_q[POST_STAGES-1][lane]) out_int8[(int'({1'b0, group_q[POST_STAGES-1]})*4+lane)*8 +: 8] <= '0;
                     else if (out_mode == 2'd2)
-                        out_int8[(int'({1'b0, group_q3})*4+lane)*8 +: 8] <= lut_value[lane];
-                    else out_int8[(int'({1'b0, group_q3})*4+lane)*8 +: 8] <= bypass_q3[lane];
+                        out_int8[(int'({1'b0, group_q[POST_STAGES-1]})*4+lane)*8 +: 8] <= lut_value[lane];
+                    else out_int8[(int'({1'b0, group_q[POST_STAGES-1]})*4+lane)*8 +: 8] <= bypass_q5[lane];
                 end
-                if (group_q3 == 2'd3) state_q <= OUTPUT;
+                if (group_q[POST_STAGES-1] == 2'd3) state_q <= OUTPUT;
             end
             unique case (state_q)
                 IDLE: begin

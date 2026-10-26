@@ -28,7 +28,8 @@ def main():
                *SOURCES[:-1], str(ROOT / SOURCES[-1])]
     identity = {
         'verilator': subprocess.check_output([args.verilator, '--version'], text=True).strip(),
-        'source_sha256': {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in SOURCES},
+        'source_sha256': {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
+                          for name in [*SOURCES, 'software/adam128_cycle_model.h']},
         'build_command': command,
         'build_driver_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
     }

@@ -2,6 +2,7 @@
 // Verilator transport for full feature maps. Only adam_conv128 computes outputs.
 #include "Vadam_conv128.h"
 #include "verilated.h"
+#include "../software/adam128_cycle_model.h"
 #include <algorithm>
 #include <array>
 #include <cstdint>
@@ -68,8 +69,44 @@ class Simulator {
     VerilatedContext context;
     Vadam_conv128 d{single_thread(context)};
     uint64_t cycles = 0;
+    struct Tile { int x,y,w,h; };
+    Tile current{};
+    int current_oc=0,current_co=0;
+    unsigned current_pixel=0;
+    bool tile_active=false;
+    uint64_t tile_deadline=0;
+    const Conv* convolution=nullptr;
+    std::vector<int32_t>* result=nullptr;
+    Stats* statistics=nullptr;
     void eval() { d.clk = 0; d.eval(); }
-    void tick() { eval(); d.clk = 1; d.eval(); ++cycles; }
+    void tick() {
+        eval();
+        if (tile_active && d.out_valid) {
+            const auto& t=*convolution;
+            unsigned pixels=current.w*current.h;
+            require(current_pixel<pixels && d.out_x==current_pixel%current.w && d.out_y==current_pixel/current.w &&
+                    d.out_mask==((1u<<current_co)-1) && bool(d.out_last)==(current_pixel+1==pixels),
+                    "output metadata mismatch during prefetch");
+            for(int oc=0;oc<current_co;++oc) {
+                size_t offset=((size_t(current_oc+oc)*t.oh()+current.y+d.out_y)*t.ow()+current.x+d.out_x);
+                uint32_t bits=d.out_data[oc];
+                (*result)[offset]=bits<=INT32_MAX ? int32_t(bits) : int32_t(int64_t(bits)-(1LL<<32));
+            }
+            for(int oc=current_co;oc<16;++oc) require(d.out_data[oc]==0,"inactive output lane");
+            ++current_pixel;
+        }
+        d.clk=1; d.eval(); ++cycles;
+        if (tile_active && d.done) {
+            const auto& t=*convolution;
+            unsigned pixels=current.w*current.h,steps=pixels*t.groups()*t.k*t.k;
+            require(!d.busy && current_pixel==pixels,"prefetched tile completion");
+            require(d.perf_mac_steps==steps && d.perf_active_cycles==adam128_no_stall_cycles(pixels,t.groups()*t.k*t.k),
+                    "RTL performance counter mismatch during prefetch");
+            statistics->mac_steps+=d.perf_mac_steps;
+            statistics->active_cycles+=d.perf_active_cycles; ++statistics->tiles;
+            tile_active=false;
+        }
+    }
 
     void weights(const Conv& t, int oc0, int channels) {
         for (int ky = 0; ky < t.k; ++ky) for (int kx = 0; kx < t.k; ++kx) {
@@ -88,7 +125,9 @@ class Simulator {
         d.weight_wr_valid = 0;
     }
 
-    void image(const Conv& t, int x0, int y0, int w, int h) {
+    void image(const Conv& t, const Tile& tile, int bank) {
+        int x0=tile.x,y0=tile.y,w=(tile.w-1)*t.stride+t.k,h=(tile.h-1)*t.stride+t.k;
+        d.act_wr_bank=bank;
         for (int y = 0; y < h; ++y) for (int x = 0; x < w; ++x) {
             const int sy = y0*t.stride-t.pad+y, sx = x0*t.stride-t.pad+x;
             const bool inside = sy >= 0 && sy < t.h && sx >= 0 && sx < t.w;
@@ -101,48 +140,30 @@ class Simulator {
                 }
                 d.act_wr_addr = (y*w+x)*t.groups()+g;
                 d.act_wr_valid = 1; eval();
-                require(d.act_wr_ready, "activation RAM backpressure while idle"); tick();
+                require(d.act_wr_ready, "inactive activation bank backpressure"); tick();
             }
         }
         d.act_wr_valid = 0;
     }
 
-    void tile(const Conv& t, int x0, int y0, int ow, int oh, int oc0, int co,
-              std::vector<int32_t>& result, Stats& stats) {
-        const int w = (ow-1)*t.stride+t.k, h = (oh-1)*t.stride+t.k;
-        image(t, x0, y0, w, h);
+    void start_tile(const Conv& t, const Tile& tile, int oc0, int co,int bank) {
+        require(!tile_active,"tile already active");
+        const int w = (tile.w-1)*t.stride+t.k, h = (tile.h-1)*t.stride+t.k;
+        d.cmd_act_bank=bank;
         d.cmd_width = w; d.cmd_height = h; d.cmd_cin = t.ci; d.cmd_cout = co;
         d.cmd_kernel3 = t.k == 3; d.cmd_stride2 = t.stride == 2; d.cmd_pad = 0;
         for (int oc = 0; oc < 16; ++oc) d.cmd_bias[oc] = 0;
         d.cmd_valid = 1; eval(); require(d.cmd_ready, "command not ready"); tick();
         d.cmd_valid = 0;
         require(d.busy && !d.cmd_error, "valid tile rejected");
-        const unsigned pixels = ow*oh, steps = pixels*t.groups()*t.k*t.k;
-        const uint64_t deadline = cycles + steps + 10*pixels + 16;
-        unsigned pixel = 0;
-        while (!d.done && cycles < deadline) {
-            eval();
-            if (d.out_valid) {
-                require(pixel < pixels && d.out_x == pixel%ow && d.out_y == pixel/ow &&
-                        d.out_mask == ((1u << co)-1) && bool(d.out_last) == (pixel+1 == pixels),
-                        "output metadata mismatch");
-                for (int oc = 0; oc < co; ++oc) {
-                    const size_t offset = ((size_t(oc0+oc)*t.oh()+y0+d.out_y)*t.ow()+x0+d.out_x);
-                    // Range is bounded by 768*9*128*128, safely inside signed INT32.
-                    const uint32_t bits = d.out_data[oc];
-                    result[offset] = bits <= INT32_MAX ? int32_t(bits) : int32_t(int64_t(bits)-(1LL << 32));
-                }
-                for (int oc = co; oc < 16; ++oc) require(d.out_data[oc] == 0, "inactive output lane");
-                ++pixel;
-            }
-            tick();
-        }
-        require(d.done && !d.busy && pixel == pixels, "tile completion/timeout");
-        require(d.perf_mac_steps == steps && d.perf_active_cycles == steps+8*pixels,
-                "RTL performance counter mismatch");
-        stats.mac_steps += d.perf_mac_steps;
-        stats.active_cycles += d.perf_active_cycles;
-        ++stats.tiles;
+        const unsigned pixels=tile.w*tile.h,steps=pixels*t.groups()*t.k*t.k;
+        tile_deadline=cycles+steps+17*pixels+16;
+        current=tile; current_oc=oc0; current_co=co; current_pixel=0; tile_active=true;
+    }
+
+    void finish_tile() {
+        while (tile_active && cycles<tile_deadline) tick();
+        require(!tile_active,"prefetched tile completion timeout");
     }
 
     static void check(const Conv& t, const std::vector<int32_t>& output) {
@@ -160,6 +181,7 @@ class Simulator {
 
 public:
     Simulator() {
+        d.act_wr_bank = 0; d.cmd_act_bank = 0;
         d.cmd_valid = 0; d.act_wr_valid = 0; d.weight_wr_valid = 0; d.out_ready = 1;
         d.rst = 1; tick(); tick(); d.rst = 0; eval();
         require(d.cmd_ready, "reset recovery failed");
@@ -168,12 +190,20 @@ public:
         const uint64_t start = cycles;
         Stats stats;
         std::vector<int32_t> output(size_t(t.ow())*t.oh()*t.co);
+        convolution=&t; result=&output; statistics=&stats;
         const int side = (16-t.k)/t.stride+1;
+        std::vector<Tile> tiles;
+        for(int y=0;y<t.oh();y+=side) for(int x=0;x<t.ow();x+=side)
+            tiles.push_back({x,y,std::min(side,t.ow()-x),std::min(side,t.oh()-y)});
         for (int oc = 0; oc < t.co; oc += 16) {
             const int co = std::min(16, t.co-oc);
             weights(t, oc, co); // Weight RAM persists across all spatial tiles of this block.
-            for (int y = 0; y < t.oh(); y += side) for (int x = 0; x < t.ow(); x += side)
-                tile(t, x, y, std::min(side,t.ow()-x), std::min(side,t.oh()-y), oc, co, output, stats);
+            image(t,tiles[0],0);
+            for(size_t i=0;i<tiles.size();++i) {
+                start_tile(t,tiles[i],oc,co,int(i%2));
+                if(i+1<tiles.size()) image(t,tiles[i+1],int((i+1)%2));
+                finish_tile();
+            }
         }
         stats.cycles = cycles-start; // Includes RAM writes and command acceptance.
         if (t.verify) { check(t, output); stats.checked = output.size(); }

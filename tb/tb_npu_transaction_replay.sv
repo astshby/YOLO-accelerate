@@ -5,7 +5,7 @@ module tb_npu_transaction_replay;
     timeprecision 1ps;
     logic clk = 0, rst = 1, scan_update = 0, scan_capture = 0;
     wire scan_dout;
-    logic [1713:0] drive = '0, word_value;
+    logic [1715:0] drive = '0, word_value;
     logic [812:0] expected;
     wire [684:0] observed = {scan_dout, dut.snapshot_q[811:128]};
     string trace_path;

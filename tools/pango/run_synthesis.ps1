@@ -1,8 +1,8 @@
-# One guarded native PDS synthesis; outputs stay in the staged project.
+# One guarded native PDS flow; outputs stay in the fresh staged project.
 param(
     [Parameter(Mandatory=$true)][string]$ProjectRoot,
     [string]$PdsHome = $env:PDS_HOME,
-    [ValidateRange(1,4)][int]$JobLimitGiB = 4,
+    [ValidateRange(1,4)][double]$JobLimitGiB = 4,
     [ValidateRange(4,64)][int]$ReserveGiB = 6,
     [ValidateRange(60,3600)][int]$TimeoutSeconds = 1800
 )
@@ -10,9 +10,22 @@ $ErrorActionPreference = 'Stop'
 $root = [IO.Path]::GetFullPath($ProjectRoot)
 if ($root.StartsWith('\\') -or $root -match '[{}"\r\n]') { throw 'Use a native Windows project path.' }
 $manifest = Get-Content -Raw -LiteralPath (Join-Path $root 'manifest.json') | ConvertFrom-Json
-if ($manifest.schema -notin @('npu128-pango-synthesis-v1', 'adam-upstream-pango-v1')) { throw 'Unexpected manifest.' }
+if ($manifest.schema -notin @('npu128-pango-synthesis-v1', 'adam-upstream-pango-v1', 'npu128-pango-implementation-v1', 'npu128-pango-uart-implementation-v1', 'npu128-pango-uart100-implementation-v1')) { throw 'Unexpected manifest.' }
 $projectName = 'npu128_post'
 if ($manifest.schema -eq 'adam-upstream-pango-v1') { $projectName = 'adam_upstream' }
+$flowName = 'synthesis'
+$scriptName = 'synthesize.tcl'
+$logName = 'synthesis.log'
+$actions = @('synthesize')
+if ($manifest.schema -in @('npu128-pango-implementation-v1', 'npu128-pango-uart-implementation-v1', 'npu128-pango-uart100-implementation-v1')) {
+    $projectName = 'npu128_impl'
+    if ($manifest.schema -eq 'npu128-pango-uart-implementation-v1') { $projectName = 'npu128_uart' }
+    if ($manifest.schema -eq 'npu128-pango-uart100-implementation-v1') { $projectName = 'npu128_uart100' }
+    $flowName = 'implementation'
+    $scriptName = 'implement.tcl'
+    $logName = 'implementation.log'
+    $actions = @('compile', 'synthesize', 'dev_map', 'place', 'route', 'route_optimize', 'report_timing')
+}
 $topName = $manifest.top
 if ($topName -notmatch '^[A-Za-z_][A-Za-z_0-9]*$') { throw 'Invalid top module.' }
 foreach ($file in $manifest.files.PSObject.Properties) {
@@ -27,7 +40,7 @@ foreach ($file in $manifest.files.PSObject.Properties) {
 if ([string]::IsNullOrWhiteSpace($PdsHome)) { throw 'Set PDS_HOME or pass -PdsHome.' }
 $exe = Join-Path $PdsHome 'bin\pds_shell.exe'
 if (-not (Test-Path -LiteralPath $exe)) { throw 'Missing pds_shell.exe.' }
-foreach ($name in @("$projectName.pds", 'synthesis.log', 'guard.json', 'guard-samples.jsonl')) {
+foreach ($name in @("$projectName.pds", $logName, 'guard.json', 'guard-samples.jsonl')) {
     if (Test-Path -LiteralPath (Join-Path $root $name)) { throw "Preserve existing $name; stage a fresh project." }
 }
 $running = @(Get-CimInstance Win32_Process | Where-Object {
@@ -55,18 +68,18 @@ $env:OMP_NUM_THREADS = '1'
 $env:OPENBLAS_NUM_THREADS = '1'
 $env:MKL_NUM_THREADS = '1'
 Add-Type -Path (Join-Path $root 'tools\pango\GuardedJob.cs')
-$command = '-work_dir "'+$root+'" -project_name '+$projectName+' -file "'+(Join-Path $root 'synthesize.tcl')+'"'
+$command = '-work_dir "'+$root+'" -project_name '+$projectName+' -file "'+(Join-Path $root $scriptName)+'"'
 $receipt = [ordered]@{ status = 'running'; before = $before; job_limit_bytes = [uint64]($JobLimitGiB*1GB);
     reserve_bytes = [uint64]($ReserveGiB*1GB); timeout_seconds = $TimeoutSeconds;
-    command = ('"'+$exe+'" '+$command); manifest_sha256 = (Get-FileHash (Join-Path $root 'manifest.json')).Hash.ToLowerInvariant();
+    flow = $flowName; command = ('"'+$exe+'" '+$command); manifest_sha256 = (Get-FileHash (Join-Path $root 'manifest.json')).Hash.ToLowerInvariant();
     peak_job_commit_bytes = [uint64]0; minimum_available_bytes = $before.available_bytes;
     minimum_free_commit_bytes = $before.free_commit_bytes }
 $job = $null
 $timer = [Diagnostics.Stopwatch]::StartNew()
 try {
-    $job = New-Object NpuGuardedJob($exe, $command, $root, (Join-Path $root 'synthesis.log'), $receipt.job_limit_bytes)
+    $job = New-Object NpuGuardedJob($exe, $command, $root, (Join-Path $root $logName), $receipt.job_limit_bytes)
     $receipt.root_pid = $job.RootPid
-    Write-Output "Started guarded NPU synthesis PID $($job.RootPid); cap=$JobLimitGiB GiB, reserve=$ReserveGiB GiB."
+    Write-Output "Started guarded NPU $flowName PID $($job.RootPid); cap=$JobLimitGiB GiB, reserve=$ReserveGiB GiB."
     do {
         $sample = Read-Memory
         $sample.active_job_processes = $job.ActiveProcesses()
@@ -78,16 +91,18 @@ try {
         if ($sample.available_bytes -lt $receipt.reserve_bytes -or $sample.free_commit_bytes -lt $receipt.reserve_bytes) {
             throw 'Windows reserve crossed; stopping only this NPU job.'
         }
-        if ($timer.Elapsed.TotalSeconds -gt $TimeoutSeconds) { throw 'NPU synthesis timeout.' }
+        if ($timer.Elapsed.TotalSeconds -gt $TimeoutSeconds) { throw "NPU $flowName timeout." }
         if ($sample.active_job_processes) { Start-Sleep -Milliseconds 1000 }
     } while ($sample.active_job_processes)
     $receipt.exit_code = $job.ExitCode()
-    if ($receipt.exit_code -ne 0) { throw "PDS exited with $($receipt.exit_code); inspect synthesis.log." }
-    $log = Get-Content -Raw -LiteralPath (Join-Path $root 'synthesis.log')
-    if ($log -notmatch '(?m)^Executing : synthesize[^\r\n]* successfully\.') {
-        throw 'PDS completion marker absent; synthesis not accepted.'
+    if ($receipt.exit_code -ne 0) { throw "PDS exited with $($receipt.exit_code); inspect $logName." }
+    $log = Get-Content -Raw -LiteralPath (Join-Path $root $logName)
+    foreach ($action in $actions) {
+        if ($log -notmatch ('(?m)^Executing : '+[regex]::Escape($action)+'\b[^\r\n]* successfully\.')) {
+            throw "PDS $action completion marker absent; $flowName not accepted."
+        }
     }
-    if (-not (Test-Path -LiteralPath (Join-Path $root "prj_tasks\syn_1\synthesize\${topName}_syn.vm"))) {
+    if ($flowName -eq 'synthesis' -and -not (Test-Path -LiteralPath (Join-Path $root "prj_tasks\syn_1\synthesize\${topName}_syn.vm"))) {
         throw 'Mapped netlist absent; synthesis not accepted.'
     }
     $receipt.status = 'PASS'
@@ -101,4 +116,4 @@ try {
     $receipt.elapsed_seconds = [math]::Round($timer.Elapsed.TotalSeconds, 3)
     [IO.File]::WriteAllText((Join-Path $root 'guard.json'), (($receipt | ConvertTo-Json -Depth 5)+[Environment]::NewLine))
 }
-Write-Output "PASS guarded synthesis; peak job commit $([math]::Round($receipt.peak_job_commit_bytes/1MB,1)) MiB."
+Write-Output "PASS guarded $flowName; peak job commit $([math]::Round($receipt.peak_job_commit_bytes/1MB,1)) MiB."

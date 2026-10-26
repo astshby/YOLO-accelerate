@@ -1,0 +1,327 @@
+{
+  "schema": "npu128-synthesis-assessment-v1",
+  "date": "2026-10-24",
+  "source_branch": "fpga/npu128-timing",
+  "source_base_commit": "08b04021d071caf86718ff057b7763ff1e18af49",
+  "baseline_tag": "baseline/adam128-image-cosim-20261023",
+  "source_sha256": {
+    "rtl/adam/adam_mul_pair.sv": "2b6e9e7837087efefe1bd12f9866d68219ec09fdbe2bd68925c1d7d03221f935",
+    "rtl/adam/adam_sdp_ram.sv": "20d2ca02713ea7eb826535a8ec7c9131c4b9ede0598b22b254f88d9e59043d0e",
+    "rtl/adam/adam_mac128.sv": "39ed2571e05469ff3247d943d7bdb05c3d71f447019a2134cfcb8dbfb1471b50",
+    "rtl/adam/adam_conv128.sv": "c0de377d148c58cef327528912ee8391c2cdfe003c4438eb6f0597bfae46fec8",
+    "rtl/npu/npu_postprocess.sv": "b4acb84b9d2fd6df3e529b4d30c31f8636a59f40ae9c6d9d1da26bc975b3afa8",
+    "rtl/npu/npu_conv128.sv": "4a214f19f23a42d81d534b645f0b024fe81545f4987e28af279210534bd50b7f",
+    "rtl/npu/npu_measure_top.sv": "dc2da1bbd156af6199156b129b58d3aeb3882a27c71f4d3a876d2f8de46b3020",
+    "tools/pango/stage.py": "2ba8f3ada5f0ca49db64f0adaadc61ed11404dc22ff4dd692bfba01084c680e4",
+    "tools/pango/run_synthesis.ps1": "bd81a14facacf37bd56a2fec2ba2a5481f68307479bd5ce241a0e511962cfd04",
+    "tools/pango/GuardedJob.cs": "70dd42a153c8171629f78040b5bc6b4ee5319ff53076ef8459532215578c6e4e",
+    "measurement.fdc": "c673fa7a5107dbfbaef3273619c3631ea4cc431b7539957479a73e0af766add0",
+    "synthesize.tcl": "4ed215b170116541e46adcdb510bd78fb6e49b05ac6a514ebe49fe56716dbf92"
+  },
+  "project": "$PDS_WORK_ROOT/work/npu128-timing-20261024b",
+  "device": "PG2L200H-6IFBB676",
+  "tool_version": "2025.2 build 211867",
+  "parameters": {
+    "MAX_SIDE": 16,
+    "MAX_CIN": 768,
+    "MAC": 128,
+    "post_lanes": 4
+  },
+  "clock_period_ns": 10,
+  "scope": "diagnostic scan harness; no CPU, DDR, AXI, PLL, pinout or board claim",
+  "status": "synthesis completed; estimated setup passes at 100 MHz",
+  "resources": {
+    "npu_measure_top": {
+      "LUT": 5674.0,
+      "FF": 10203.0,
+      "APM": 82.0,
+      "DRM": 94.5
+    },
+    "u_npu(npu_conv128)": {
+      "LUT": 5259.0,
+      "FF": 5961.0,
+      "APM": 82.0,
+      "DRM": 94.5
+    },
+    "u_conv(adam_conv128)": {
+      "LUT": 3600.0,
+      "FF": 3849.0,
+      "APM": 66.0,
+      "DRM": 92.5
+    },
+    "u_post(npu_postprocess)": {
+      "LUT": 1572.0,
+      "FF": 2043.0,
+      "APM": 16.0,
+      "DRM": 2.0
+    },
+    "u_mac(adam_mac128)": {
+      "LUT": 1969.0,
+      "FF": 1982.0,
+      "APM": 64.0,
+      "DRM": 0.0
+    },
+    "u_activation_ram(adam_sdp_ram)": {
+      "LUT": 0.0,
+      "FF": 0.0,
+      "APM": 0.0,
+      "DRM": 64.0
+    },
+    "u_weight_ram(adam_sdp_ram_1)": {
+      "LUT": 1.0,
+      "FF": 0.0,
+      "APM": 0.0,
+      "DRM": 28.5
+    },
+    "scan_harness_difference": {
+      "LUT": 415.0,
+      "FF": 4242.0,
+      "APM": 0.0,
+      "DRM": 0.0
+    }
+  },
+  "cell_usage": [
+    {
+      "GTP Name": "GTP_APM_E2",
+      "Usage": "82"
+    },
+    {
+      "GTP Name": "GTP_DFF",
+      "Usage": "2603"
+    },
+    {
+      "GTP Name": "GTP_DFF_E",
+      "Usage": "24"
+    },
+    {
+      "GTP Name": "GTP_DFF_R",
+      "Usage": "253"
+    },
+    {
+      "GTP Name": "GTP_DFF_RE",
+      "Usage": "7278"
+    },
+    {
+      "GTP Name": "GTP_DFF_S",
+      "Usage": "28"
+    },
+    {
+      "GTP Name": "GTP_DFF_SE",
+      "Usage": "17"
+    },
+    {
+      "GTP Name": "GTP_DRM18K_E1",
+      "Usage": "5"
+    },
+    {
+      "GTP Name": "GTP_DRM36K_E1",
+      "Usage": "92"
+    },
+    {
+      "GTP Name": "GTP_GRS",
+      "Usage": "1"
+    },
+    {
+      "GTP Name": "GTP_LUT1",
+      "Usage": "3"
+    },
+    {
+      "GTP Name": "GTP_LUT2",
+      "Usage": "17"
+    },
+    {
+      "GTP Name": "GTP_LUT3",
+      "Usage": "12"
+    },
+    {
+      "GTP Name": "GTP_LUT4",
+      "Usage": "176"
+    },
+    {
+      "GTP Name": "GTP_LUT5",
+      "Usage": "125"
+    },
+    {
+      "GTP Name": "GTP_LUT6",
+      "Usage": "977"
+    },
+    {
+      "GTP Name": "GTP_LUT6CARRY",
+      "Usage": "2950"
+    },
+    {
+      "GTP Name": "GTP_LUT6D",
+      "Usage": "1414"
+    },
+    {
+      "GTP Name": "GTP_MUX2LUT7",
+      "Usage": "32"
+    },
+    {
+      "GTP Name": "GTP_MUX2LUT8",
+      "Usage": "8"
+    },
+    {
+      "GTP Name": "GTP_INBUF",
+      "Usage": "6"
+    },
+    {
+      "GTP Name": "GTP_OUTBUF",
+      "Usage": "1"
+    }
+  ],
+  "estimated_fmax": [
+    {
+      "Clock": "clk",
+      "Fmax": "124.6883MHz",
+      "Requested Frequency": "100.0000MHz",
+      "Slack": "1.980"
+    }
+  ],
+  "estimated_setup": [
+    {
+      "Launch Clock": "clk",
+      "Capture Clock": "clk",
+      "WNS(ns)": "1.980",
+      "TNS(ns)": "0.000",
+      "Failing Endpoints": "0",
+      "Total Endpoints": "32620"
+    }
+  ],
+  "estimated_hold": [
+    {
+      "Launch Clock": "clk",
+      "Capture Clock": "clk",
+      "WHS(ns)": "-2.523",
+      "THS(ns)": "-1957.782",
+      "Failing Endpoints": "9359",
+      "Total Endpoints": "32620"
+    }
+  ],
+  "check_timing": [
+    {
+      "Check": "no_clock",
+      "Number of Issues": "0"
+    },
+    {
+      "Check": "virtual_clock",
+      "Number of Issues": "1"
+    },
+    {
+      "Check": "unexpandable_clocks",
+      "Number of Issues": "0"
+    },
+    {
+      "Check": "no_input_delay",
+      "Number of Issues": "0"
+    },
+    {
+      "Check": "no_output_delay",
+      "Number of Issues": "0"
+    },
+    {
+      "Check": "partial_input_delay",
+      "Number of Issues": "0"
+    },
+    {
+      "Check": "partial_output_delay",
+      "Number of Issues": "0"
+    },
+    {
+      "Check": "io_min_max_delay_consistency",
+      "Number of Issues": "0"
+    },
+    {
+      "Check": "input_delay_assigned_to_clock",
+      "Number of Issues": "0"
+    },
+    {
+      "Check": "loops",
+      "Number of Issues": "0"
+    },
+    {
+      "Check": "latch_loops",
+      "Number of Issues": "0"
+    },
+    {
+      "Check": "latchs",
+      "Number of Issues": "0"
+    }
+  ],
+  "worst_setup_path": {
+    "Slack": "1.980",
+    "Logic Levels": "1",
+    "High Fanout": "1",
+    "Start Point": "snapshot_q[812]/CLK",
+    "End Point": "scan_dout",
+    "Exception": "",
+    "Launch Clock": "clk",
+    "Capture Clock": "clk",
+    "Clock Edges": "rise-rise",
+    "Clock Skew": "-3.426",
+    "Launch Clock Delay": "3.426",
+    "Capture Clock Delay": "0.000",
+    "Clock Pessimism Removal": "0.000",
+    "Requirement": "10.000",
+    "Data delay": "3.344",
+    "Logic delay": "3.344 (100.0%)",
+    "Route delay": "0.000 (0.0%)"
+  },
+  "worst_path_resources": [
+    "clk (port)",
+    "clk",
+    "clk_ibuf/I (GTP_INBUF)",
+    "clk_ibuf/O (GTP_INBUF)",
+    "nt_clk",
+    "snapshot_q[812]/CLK (GTP_DFF_RE)",
+    "snapshot_q[812]/Q (GTP_DFF_RE)",
+    "nt_scan_dout",
+    "scan_dout_obuf/I (GTP_OUTBUF)",
+    "scan_dout_obuf/O (GTP_OUTBUF)",
+    "scan_dout",
+    "scan_dout (port)"
+  ],
+  "reported_setup_paths": 100,
+  "all_reported_setup_paths_end_in_activation_ram": false,
+  "memory_guard": {
+    "status": "PASS",
+    "before": {
+      "timestamp": "2026-10-24T10:16:40.1003982+08:00",
+      "available_bytes": 14242373632,
+      "free_commit_bytes": 16795987968
+    },
+    "job_limit_bytes": 2147483648,
+    "reserve_bytes": 6442450944,
+    "timeout_seconds": 1800,
+    "command": "pds_shell.exe -work_dir \"$PROJECT\" -project_name npu128_post -file \"$PROJECT/synthesize.tcl\"",
+    "manifest_sha256": "aee4bffadfecdf9efb6ccb707820c94a24f79c4a67db6ca2d6a138b0545644df",
+    "peak_job_commit_bytes": 773087232,
+    "minimum_available_bytes": 12955394048,
+    "minimum_free_commit_bytes": 15477567488,
+    "root_pid": 42784,
+    "exit_code": 0,
+    "elapsed_seconds": 101.039
+  },
+  "raw_evidence_sha256": {
+    "manifest.json": "aee4bffadfecdf9efb6ccb707820c94a24f79c4a67db6ca2d6a138b0545644df",
+    "guard.json": "04bf410f982d55e984dc48cbd1941fac71e68913a18b9a71d89779f2111d1f33",
+    "guard-samples.jsonl": "82040d105112b2ce4ac574f30c4ad8b2d77d86e24859de58ff0d12be6cfd3dbe",
+    "synthesis.log": "4d5c8e33ccf16c810733f7fd6182ae650d1d66f59520c10092484e610e0590a2",
+    "prj_tasks/syn_1/synthesize/npu_measure_top_syn.vm": "7852d276ee35e72fa7bc7c449f43741642fcfb5de1bd750ea7565ffe9a054a4d",
+    "prj_tasks/syn_1/synthesize/npu_measure_top.snr": "2136e73f287ac6cf49b6709df2cdad86b1a084c966232cfab3d83639d8618ca0",
+    "prj_tasks/syn_1/synthesize/report_db/synthesize_resource_utilization.db": "4988344a3c345c28a612a635b0a99530c665d5e9607c3bec5b151f1f83ca136b",
+    "prj_tasks/syn_1/synthesize/report_db/synthesize_resource_usage.db": "4dc14301c9c64b36bb936dc5525cc970619ae5364071d2fb38982c75decb2a9d",
+    "prj_tasks/syn_1/synthesize/report_db/synthesize_report_timing_fmax.db": "3fe622b571c8c83ff16137749e69a109e6585ca9a39f64e5a558e575a39fe59c",
+    "prj_tasks/syn_1/synthesize/report_db/synthesize_report_timing_setup.db": "85c8f121af1555b75b25a7b34b6ce4cfb70b4a2d256644e2f5bc471f3cfafbfc",
+    "prj_tasks/syn_1/synthesize/report_db/synthesize_report_timing_hold.db": "02677a61ef02906f673506388b59509eb4f46e5ba05bffbb29a13ebcbb18c1c2",
+    "prj_tasks/syn_1/synthesize/report_db/synthesize_report_timing_path_setup.db": "c01a74ff8390400e155b228b251950dd7fedb7da04c09c9f2d1800a94b795989",
+    "prj_tasks/syn_1/synthesize/report_db/synthesize_check_timing_summary.db": "d45e9a4b8810ec5e54407312d27433cf287f90599d51c21f514a2b3873c4b826",
+    "prj_tasks/syn_1/synthesize/report_db/synthesize_settings.db": "e23edbd47227757516fbacd7bacff0225bd3c365140f9e21cdca7f602c06a26b"
+  },
+  "route_run": false,
+  "routed_fmax_mhz": null,
+  "routed_wns_ns": null,
+  "unrouted_nets": null,
+  "board_run": false,
+  "note": "Synthesis estimates do not establish placed/routed or CPU/DDR-integrated performance."
+}

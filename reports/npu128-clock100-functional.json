@@ -1,0 +1,114 @@
+{
+  "schema": "npu128-clock100-functional-v1",
+  "status": "PASS",
+  "source_sha256": {
+    "rtl/adam/adam_mul_pair.sv": "2b6e9e7837087efefe1bd12f9866d68219ec09fdbe2bd68925c1d7d03221f935",
+    "rtl/adam/adam_sdp_ram.sv": "20d2ca02713ea7eb826535a8ec7c9131c4b9ede0598b22b254f88d9e59043d0e",
+    "rtl/adam/adam_mac128.sv": "39ed2571e05469ff3247d943d7bdb05c3d71f447019a2134cfcb8dbfb1471b50",
+    "rtl/adam/adam_conv128.sv": "a7cd862b4d5ad399e00cab798bb43221c81dd54fa547fbd8ce74ee1ecbe39b5d",
+    "rtl/npu/npu_postprocess.sv": "b4acb84b9d2fd6df3e529b4d30c31f8636a59f40ae9c6d9d1da26bc975b3afa8",
+    "rtl/npu/npu_conv128.sv": "2f9ff37bb69fae17e787582fbf1b847cb90dfd12eede077baa17f592c4d5c7bb",
+    "rtl/npu/npu_mmio128.sv": "864f6750fed3a92bd52881d59359ca8a2907a16c2335c6a33f1485a213fca667",
+    "rtl/io/uart_8n1.sv": "34b72009fcc8813d6d31e369bd7a80959ec1ebbf3dc6b9fed0a200f438ec2270",
+    "rtl/io/uart_mmio_bridge.sv": "4bc1a01b23b07897e48798b111da19619fe1bd6f49faa050a816761e4dc19220",
+    "rtl/board/npu_uart_board.sv": "072c1bc198a1edca75797cae0a48d183b1119eeea6a28512e0d6b16242faeacc",
+    "rtl/board/npu_clock100.sv": "595b45a37dce029822dcd73a82bd37d43b4b42f82dba5ec8c435daeaccd5e749",
+    "rtl/board/npu_uart_board100.sv": "d106fd0a7c99e2c4c366cb6673f16aeb47a7607f307ca8e831f0c4a64fc090de",
+    "tb/tb_npu_clock100.sv": "88c16be13b45eb3868d11a0cc4e22a631ac1dd4449a0951ffb5a720c8a532c16",
+    "tools/run_clock100_tests.py": "64d1c1e71a98b5da246d88947ec21a5b9430dffea7cd569365a50cb141397929",
+    "tools/run_guarded.py": "0c3098fed4b23d1765a229dc39370fb8ec1b6701e525cdfae53bc8f060c7a84e",
+    "config/uart-board100.json": "93d0630903f2436ef903f6fd3e6c2b9f8392e617ec20beddbe50d19f0e58b14d"
+  },
+  "vendor_model_sha256": "b1e0df6237c4502a5a01978c4e14db9b58c946c64cb614e88e89458c8c533fb2",
+  "vendor_model": "$PDS_HOME/arch/vendor/pango/verilog/simulation/GTP_GPLL.v",
+  "source_base_commit": "eac44da3bfd443d11a0a273c19b4b94da112c8aa",
+  "reference_hz": 27000000,
+  "output_hz": 100000000,
+  "checked_periods": 200,
+  "period_ns_bounds": [
+    9.99,
+    10.01
+  ],
+  "high_width_ns_bounds": [
+    4.99,
+    5.01
+  ],
+  "checks": [
+    "PLL acquisition",
+    "system held reset until lock",
+    "three-clock reset release",
+    "UART TX idle",
+    "KEY0 asynchronous assertion",
+    "PLL reset and relock"
+  ],
+  "result": "PLL model initialized at 10000000\nPLL reference running at 210000000; lock=0\nPLL acquisition at 2210000000; lock=1\nPASS real GTP_GPLL board model: 200 100MHz periods/high widths; lock gating, three-clock reset release, KEY0 reset and relock\n- tb/tb_npu_clock100.sv:50: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.052 2026-09-05\n- Verilator: $finish at 3us; walltime 0.832 s; speed 4.005 us/s\n- Verilator: cpu 0.424 s on 1 threads; allocated 5 MB",
+  "binary_sha256": "a5c2336cd0dc7dd243ab455056ef12737946a8816e7f24514f4c0129dce9d7fc",
+  "metrics": [
+    {
+      "command": [
+        "verilator",
+        "--binary",
+        "--timing",
+        "--x-initial-edge",
+        "-Wno-fatal",
+        "-j",
+        "1",
+        "--threads",
+        "1",
+        "--top-module",
+        "tb_npu_clock100",
+        "--Mdir",
+        "/home/yukino/new_project/YOLO-accelerate/build/clock100-vlt-c/obj",
+        "rtl/adam/adam_mul_pair.sv",
+        "rtl/adam/adam_sdp_ram.sv",
+        "rtl/adam/adam_mac128.sv",
+        "rtl/adam/adam_conv128.sv",
+        "rtl/npu/npu_postprocess.sv",
+        "rtl/npu/npu_conv128.sv",
+        "rtl/npu/npu_mmio128.sv",
+        "rtl/io/uart_8n1.sv",
+        "rtl/io/uart_mmio_bridge.sv",
+        "rtl/board/npu_uart_board.sv",
+        "rtl/board/npu_clock100.sv",
+        "rtl/board/npu_uart_board100.sv",
+        "tb/tb_npu_clock100.sv",
+        "/mnt/f/pango/PDS_2025.2-ads/arch/vendor/pango/verilog/simulation/GTP_GPLL.v"
+      ],
+      "returncode": 0,
+      "guard_stop": null,
+      "elapsed_seconds": 28.571860915995785,
+      "sampled_process_group_peak_rss_bytes": 404938752,
+      "minimum_linux_available_bytes": 15319945216,
+      "rss_limit_mib": 768,
+      "per_process_address_space_limit_mib": 1536,
+      "linux_reserve_mib": 6144,
+      "cpu_affinity_count": 1,
+      "nice": 19,
+      "sampling_period_seconds": 0.05,
+      "limits": "RSS is sampled, not a cgroup hard limit; Windows memory is not measured here."
+    },
+    {
+      "command": [
+        "/home/yukino/new_project/YOLO-accelerate/build/clock100-vlt-c/obj/Vtb_npu_clock100"
+      ],
+      "returncode": 0,
+      "guard_stop": null,
+      "elapsed_seconds": 0.876221163009177,
+      "sampled_process_group_peak_rss_bytes": 4640768,
+      "minimum_linux_available_bytes": 15625805824,
+      "rss_limit_mib": 768,
+      "per_process_address_space_limit_mib": 1536,
+      "linux_reserve_mib": 6144,
+      "cpu_affinity_count": 1,
+      "nice": 19,
+      "sampling_period_seconds": 0.05,
+      "limits": "RSS is sampled, not a cgroup hard limit; Windows memory is not measured here."
+    }
+  ],
+  "verilator": "Verilator 5.052 2026-09-05 rev vUNKNOWN-built20260918",
+  "limitations": [
+    "Timed two-state behavioral simulation with explicit initial asynchronous reset edges (--x-initial-edge), not analog PLL characterization or physical STA.",
+    "UART byte traffic is verified separately on the complete digital body at the actual 100 MHz divider.",
+    "Icarus 11 loops at zero time in this unmodified vendor model; its failed attempts remain in build/clock100-a and build/clock100-b."
+  ]
+}

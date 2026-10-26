@@ -1,0 +1,153 @@
+{
+  "schema": "npu128-uart-board-assessment-v1",
+  "status": "JTAG_PASS_UART_PENDING",
+  "scope": "actual board volatile JTAG programming/readback only; UART convolution not run",
+  "device": "PG2L200H",
+  "idcode": "0x00603899",
+  "clock_hz": 27000000,
+  "bitstream_validation_sha256": "b8b4d4e9b74999faa647b7feb12a966c3cc289fb023995d9a406c611470ffd87",
+  "bitstream_sha256": "0c0e2650dae4eb0025fa02d78680cada8a0c8ca391b597b73bdc8d859c0d3c96",
+  "usercode": "0x12802701",
+  "config_status": "0x001ffca0",
+  "done": true,
+  "configuration_error_mask": "0x1800001f",
+  "configuration_error_bits": 0,
+  "jtag_readback_verified": true,
+  "jtag_clock_hz": 5000000,
+  "jtag_receipt": {
+    "schema": "npu128-uart-jtag-v1",
+    "status": "PASS",
+    "bitstream_sha256": "0c0e2650dae4eb0025fa02d78680cada8a0c8ca391b597b73bdc8d859c0d3c96",
+    "validation_sha256": "b8b4d4e9b74999faa647b7feb12a966c3cc289fb023995d9a406c611470ffd87",
+    "scope": "volatile JTAG configuration and verify; no flash/eFuse/key operations",
+    "job_limit_bytes": 1073741824,
+    "timeout_seconds": 300,
+    "peak_job_commit_bytes": 143368192,
+    "root_pid": 19472,
+    "exit_code": 0,
+    "elapsed_seconds": 57.544
+  },
+  "user_reported_key0_pressed": true,
+  "uart": {
+    "run": false,
+    "reason": "CP2102 USB-UART not enumerated; user cannot replace its data cable this session.",
+    "preflight": {
+      "timestamp_utc": "2026-10-24T13:51:34.343533+00:00",
+      "pyserial": "3.5",
+      "ports": [
+        {
+          "device": "COM9",
+          "description": "USB Serial Port (COM9)",
+          "vid": 1027,
+          "pid": 24592
+        },
+        {
+          "device": "COM7",
+          "description": "蓝牙链接上的标准串行 (COM7)",
+          "vid": null,
+          "pid": null
+        },
+        {
+          "device": "COM8",
+          "description": "蓝牙链接上的标准串行 (COM8)",
+          "vid": null,
+          "pid": null
+        },
+        {
+          "device": "COM3",
+          "description": "蓝牙链接上的标准串行 (COM3)",
+          "vid": null,
+          "pid": null
+        },
+        {
+          "device": "COM10",
+          "description": "USB Serial Port (COM10)",
+          "vid": 1027,
+          "pid": 24592
+        },
+        {
+          "device": "COM5",
+          "description": "蓝牙链接上的标准串行 (COM5)",
+          "vid": null,
+          "pid": null
+        },
+        {
+          "device": "COM4",
+          "description": "蓝牙链接上的标准串行 (COM4)",
+          "vid": null,
+          "pid": null
+        },
+        {
+          "device": "COM6",
+          "description": "蓝牙链接上的标准串行 (COM6)",
+          "vid": null,
+          "pid": null
+        }
+      ],
+      "cp2102_present": false,
+      "serial_port_opened": false
+    }
+  },
+  "flash_written": false,
+  "efuse_or_keys_written": false,
+  "bitstream_attempts": [
+    {
+      "project": "npu128-uart-bitstream-20261024a",
+      "disposition": "REJECTED_ARGUMENTS",
+      "evidence_sha256": {
+        "bitstream.log": "d698765a8f2e5b4c44972ba0bdd63f7c3298cb9e0eeafd8ec88292e823d600e8",
+        "bitstream-guard.json": "a4f0b27cbb3f46b30ad93a7cac841ca3a1f02f3cd8363d21417eb71ca659c601"
+      }
+    },
+    {
+      "project": "npu128-uart-bitstream-20261024b",
+      "disposition": "ABORTED_UNEXPECTED_RERUN",
+      "evidence_sha256": {
+        "bitstream.log": "6e2875e910070be43282acd0d9ba6817309a075d8bb7f7c008b376a119de1457",
+        "bitstream-aborted.json": "cb424ac3b0ceda23ce004e246302d3a4b1f780729205df567cc89d0c786f5d77"
+      }
+    },
+    {
+      "project": "npu128-uart-bitstream-20261024c",
+      "disposition": "REJECTED_UNSET_SCBV",
+      "evidence_sha256": {
+        "bitstream.log": "8609ace4997fd90bcf72fcd3fdcf33c2822bfcaf45877b7bb69aa4321b1e5bde",
+        "bitstream-guard.json": "5d8eb1bc2939873b1031740a6b20e40cdffa5977015d810f3d92581270d7f52e"
+      }
+    },
+    {
+      "project": "npu128-uart-bitstream-20261024d",
+      "disposition": "ACCEPTED",
+      "evidence_sha256": {
+        "bitstream.log": "df04545b7c8f8aed349b474a374bc9ce9e9c70e5954bf118f65f25f52efa14c7",
+        "bitstream-guard.json": "1bd296252856e7d450f9bd90929d6640726f3b31568c88b84f70b51db05f1f57"
+      }
+    }
+  ],
+  "source_sha256": {
+    "tools/pango/program_uart_board.ps1": "d99632b28280eb71302f38d16129eb70c1cd8005c44cffd3dc9af5f629508cb0",
+    "tools/pango/scan_uart_board.tcl": "0211246273c0df029db55eb816557236a125abc973282791a7102c9c154da71d",
+    "tools/pango/collect_uart_board.py": "96c0825dc850d97db69fd80cbb06fb7c5ad13dc2ea7f5b1ef22f6f8da4ae4252",
+    "tools/npu_uart.py": "03c9cec2290d95882eeb81e8650bc26ea3fc14868695df488b482da2b3f43851"
+  },
+  "raw_evidence_sha256": {
+    "scan.tcl": "0211246273c0df029db55eb816557236a125abc973282791a7102c9c154da71d",
+    "scan.log": "be79ffa89de6d21fc181fe89c599004d2aa2fdf264dd2432ffc80e726eccf404",
+    "scan-return.tcl": "a73fa8918b3234888a980343a7e0912ff2db24f97afcbf8a8ee062ec6d826d00",
+    "scan-return.log": "35349b528ea45b6c916e79c84121c830a6fd0744f8182b1d4261e1a714ea97b0",
+    "program_uart_board.ps1": "d99632b28280eb71302f38d16129eb70c1cd8005c44cffd3dc9af5f629508cb0",
+    "GuardedJob.cs": "70dd42a153c8171629f78040b5bc6b4ee5319ff53076ef8459532215578c6e4e",
+    "program-a/program.tcl": "47bdc6d7d18cbcdb43bc33aeeb3682e39b1cd4ee12be1686e2c97ce01d6538ae",
+    "program-a/program.log": "f1d350becb3e09e871db1681bdd61d169aa50069e2e9e121bcffef7700512a71",
+    "program-a/program-receipt.json": "5ae37621273d1773bd07d744a55fab37da08bbb4a2d082cb9d3b0dc496ace3e2",
+    "program-a/bitstream-validation.json": "b8b4d4e9b74999faa647b7feb12a966c3cc289fb023995d9a406c611470ffd87",
+    "serial-inventory.json": "71b69159eb36ea55df5a2ea0494dd9dcd374dac801d5228d2fd5e8805ad482ec",
+    "jtag-server.stdout.log": "108181624ce66415976b8773db10e20660b7b9abba6bd7fd857469dd8564c4da",
+    "jtag-server.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "limitations": [
+    "DONE, usercode and readback validate FPGA configuration, not convolution behavior.",
+    "No physical UART ID/ABI or numerical test. Existing pin-level RTL and byte-level mapped tests remain separate.",
+    "Configuration is volatile; power cycling requires programming again."
+  ]
+}

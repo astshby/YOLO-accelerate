@@ -11,6 +11,7 @@ module npu_conv128 #(
 ) (
     input  logic clk,
     input  logic rst,
+    input  logic act_wr_bank,
     input  logic act_wr_valid,
     output logic act_wr_ready,
     input  logic [ACT_AW-1:0] act_wr_addr,
@@ -27,6 +28,7 @@ module npu_conv128 #(
     output logic cfg_error,
     output logic lut_ready,
     input  logic cmd_valid,
+    input  logic cmd_act_bank,
     output logic cmd_ready,
     input  logic [1:0] cmd_mode,
     input  logic [7:0] cmd_width,
@@ -57,6 +59,7 @@ module npu_conv128 #(
     timeunit 1ns;
     timeprecision 1ps;
     logic active_q, local_error_q, mode_ok, cmd_fire, out_fire;
+    logic active_bank_q, act_bank_writable;
     logic [1:0] mode_q;
     logic conv_cmd_ready, conv_error, conv_valid, conv_ready;
     logic conv_busy, post_busy, unused_conv_done;
@@ -69,7 +72,8 @@ module npu_conv128 #(
     assign busy = active_q || conv_busy || post_busy;
     assign mode_ok = cmd_mode < 3 && (cmd_mode != 2 || lut_ready);
     assign cfg_ready = !rst && !busy && post_cfg_ready;
-    assign act_wr_ready = !rst && !busy && conv_act_ready;
+    assign act_bank_writable = !busy || act_wr_bank != active_bank_q;
+    assign act_wr_ready = !rst && act_bank_writable && conv_act_ready;
     assign weight_wr_ready = !rst && !busy && conv_weight_ready;
     assign cmd_ready = !rst && !busy && !cfg_valid && conv_cmd_ready;
     assign cmd_fire = cmd_valid && cmd_ready;
@@ -78,11 +82,11 @@ module npu_conv128 #(
 
     adam_conv128 #(.MAX_SIDE(MAX_SIDE), .MAX_CIN(MAX_CIN)) u_conv (
         .clk, .rst,
-        .act_wr_valid(act_wr_valid && !busy), .act_wr_ready(conv_act_ready),
+        .act_wr_valid(act_wr_valid && act_bank_writable), .act_wr_ready(conv_act_ready), .act_wr_bank,
         .act_wr_addr, .act_wr_data,
         .weight_wr_valid(weight_wr_valid && !busy), .weight_wr_ready(conv_weight_ready),
         .weight_wr_addr, .weight_wr_data,
-        .cmd_valid(cmd_fire && mode_ok), .cmd_ready(conv_cmd_ready),
+        .cmd_valid(cmd_fire && mode_ok), .cmd_ready(conv_cmd_ready), .cmd_act_bank,
         .cmd_width, .cmd_height, .cmd_cin, .cmd_cout,
         .cmd_kernel3, .cmd_stride2, .cmd_pad, .cmd_bias,
         .cmd_error(conv_error), .busy(conv_busy), .done(unused_conv_done),
@@ -104,6 +108,7 @@ module npu_conv128 #(
     always_ff @(posedge clk) begin
         if (rst) begin
             active_q <= 1'b0;
+            active_bank_q <= 1'b0;
             local_error_q <= 1'b0;
             mode_q <= '0;
             done <= 1'b0;
@@ -123,6 +128,7 @@ module npu_conv128 #(
                 if (!mode_ok) local_error_q <= 1'b1;
                 else begin
                     active_q <= 1'b1;
+                    active_bank_q <= cmd_act_bank;
                     mode_q <= cmd_mode;
                     perf_total_cycles <= '0;
                     perf_post_stalls <= '0;

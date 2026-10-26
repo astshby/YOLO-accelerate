@@ -1,5 +1,24 @@
 # YOLO-accelerate
 
+> 当前 `fpga/npu128-uart-bulk` 已实现 128 字节权重批量帧，最终功能、隔离反例、四态网表和
+> 100 MHz 布线通过（setup +0.707 ns、hold +0.039 ns）。新位流 `12810002` JTAG 下载/回读通过，
+> 同位流旧/批量模式三组卷积均通过、零重传：19.091 → 11.401 秒；权重有效吞吐约 6.97 倍，
+> 见 [UART_BULK128.md](docs/UART_BULK128.md)。
+>
+> 2026-10-26 前一阶段 `fpga/npu128-uart-host` 完成主机收包优化，同位流三组卷积实测
+> **77.672 → 18.828 秒（约 4.13 倍）**，2,759 次事务、零重传，输出逐值一致。
+> RTL/100 MHz 位流未变，完整记录见 [UART_HOST128.md](docs/UART_HOST128.md)。
+>
+> 前一硬件阶段 `fpga/npu128-mmio-timing` 已将完整板级入口提升至真实 PLL 100 MHz：
+> 分级 MMIO 21 任务/674 向量、100 MHz 分频的完整 UART 引脚回归、厂商 PLL 锁定/复位测试、
+> 新综合网表 103 帧四态回放均通过。完整顶层 100 MHz 布线 setup +0.805 ns、hold +0.039 ns、未布通 0；
+> 新位流 JTAG 下载/回读及 COM11 三组卷积实测通过：12 向量、384 个 RAW/INT8 值一致，
+> 2,759 次事务、零重传，见 [MMIO_TIMING128.md](docs/MMIO_TIMING128.md)。
+>
+> 2026-10-24 前一阶段 `fpga/npu128-uart` 已增加真实管脚顶层、UART→MMIO 桥和 Python 主机客户端。
+> 完整引脚 RTL 仿真、字节级 GTP 网表回放及 27 MHz 真实管脚 PDS 通过；实际 JTAG 下载/回读和 CP2102 COM11 三组卷积自检通过：12 向量、384 个 RAW/INT8 值一致，见 [BOARD128.md](docs/BOARD128.md)。
+> 计算核保持 [RAM 优化版本](docs/RAM128.md) 原样：126.5 DRM、独立 100 MHz setup/hold 通过。下文保留各阶段分支对照。
+
 RISC-V 控制的静态图像目标检测加速器。电脑传入图片，软核调度 FPGA 卷积计算，
 再返回类别、置信度与检测框。当前以 **YOLOX-Tiny 为主、Nano 为备选**，
 当前硬件主线采用 **adamgallas 原始 576 路 INT8 卷积数据通路**，不使用摄像头。
@@ -23,6 +42,15 @@ RISC-V 控制的静态图像目标检测加速器。电脑传入图片，软核�
 | `main` | 共同开发与文档入口，采用完整上游 576 路 INT8 卷积通路 | 新功能从这里创建分支，经 PR 合入 |
 | `fpga/adam-upstream-faithful` | 完整上游移植的固定对照，源码与接口说明见 `docs/UPSTREAM.md` | 保留 `948c74f`；卷积仿真通过，暂无有效 Pango 综合结果 |
 | `fpga/npu128-bringup` | 128 MAC、INT32 累加及定点量化/激活的对照实现 | 保留 `f0134a0`；已有独立综合，100 MHz 尚未收敛 |
+| `fpga/npu128-timing` | 128 MAC 地址、加法树及量化流水优化 | 独立布局布线 100 MHz 通过：setup +0.208 ns、hold +0.036 ns、未布通 0；见 `docs/IMPLEMENTATION128.md` |
+| `fpga/npu128-throughput` | 128 MAC 连续像素发射、两项结果队列及 credit 流控 | 100 MHz 布线通过：setup +0.243 ns、hold +0.036 ns；Tiny 416 加权周期减少 24.82%，NPU 增加 544 FF；见 `docs/THROUGHPUT128.md` |
+| `fpga/npu128-prefetch` | 双 bank 激活缓存，装载与计算重叠，图片服务已使用 | 100 MHz 布线通过：setup +0.193 ns、hold +0.037 ns；总周期进一步减少 18.31%，RAM 158.5 DRM36K；见 `docs/PREFETCH128.md` |
+| `fpga/npu128-ramcompact` | 每个激活 bank 分为三段 8K 字，保持容量和预装载 | 100 MHz 布线 setup +0.214 ns、hold +0.037 ns、未布通 0；126.5 DRM，比预装载基线节省 32，功能与周期等价通过，见 `docs/RAM128.md` |
+| `fpga/npu128-mmio` | 控制寄存器、激活/权重暂存提交、单向量读回槽和 C11 传输接口 | 19 任务、672 向量、269,859 次公开总线事务通过；外围 PDS/上板待做，见 `docs/MMIO128.md` |
+| `fpga/npu128-uart` | 板载 27 MHz、真实 UART/KEY0 管脚、CRC 停等桥与 Python 客户端 | 引脚仿真及字节级门级回放通过；27 MHz PDS setup +20.614 ns、hold +0.039 ns、未布通 0；126.5 DRM，见 `docs/UART128.md` |
+| `fpga/npu128-mmio-timing` | MMIO 请求/提交流水及真实 27→100 MHz GPLL 板级入口 | 完整顶层 100 MHz setup +0.805 ns、hold +0.039 ns；6,946 LUT / 9,625 FF / 82 APM / 126.5 DRM；JTAG 与 COM11 三组卷积实测通过，见 `docs/MMIO_TIMING128.md` |
+| `fpga/npu128-uart-host` | 固定帧收包与同位流吞吐测量 | 三组卷积 77.672 → 18.828 秒，2,759 笔零重传；RTL/位流不变，见 `docs/UART_HOST128.md` |
+| `fpga/npu128-uart-bulk` | 完整权重字批量写、全帧 CRC 与缓存去重、帧错隔离 | 功能/网表及 100 MHz setup +0.707 ns、hold +0.039 ns 通过；JTAG 12810002 和实板旧/批量模式均通过；2,759 → 1,538 笔，完整流程约 1.67 倍，见 `docs/UART_BULK128.md` |
 
 早期 Nano 评估、候选选型、128 MAC 初始移植和图片仿真的阶段分支已移除，相关提交仍在
 `main` 历史中。图片复现使用标签 `baseline/adam128-image-cosim-20261023`（`658b547`）。

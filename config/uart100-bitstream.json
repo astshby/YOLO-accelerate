@@ -1,0 +1,13 @@
+{
+  "board": "MES2L676-200HP",
+  "device": "PG2L200H-6IFBB676",
+  "clock_hz": 100000000,
+  "scbv": "High Voltage",
+  "usercode": "12810001",
+  "configuration_bank_voltage": 3.3,
+  "board_manual_sha256": "b045d4a3bb436a5ccd499d107081b4de0da26f84c19ff20bfe53e4c4d66d9e4c",
+  "board_manual_power_pdf_page": 11,
+  "voltage_evidence": "Board manual power table: BANK L3/L4/L5 supplied by 3.3 V.",
+  "vendor_voltage_reference": "https://www.pangomicro.com/en/uploads/34165729_1729132019.pdf",
+  "programming_scope": "volatile JTAG FPGA configuration; no flash/eFuse/key operations"
+}

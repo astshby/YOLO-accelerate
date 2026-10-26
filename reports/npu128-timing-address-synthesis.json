@@ -1,0 +1,529 @@
+{
+  "schema": "npu128-synthesis-assessment-v1",
+  "date": "2026-10-24",
+  "source_branch": "fpga/npu128-timing",
+  "source_base_commit": "08b04021d071caf86718ff057b7763ff1e18af49",
+  "baseline_tag": "baseline/adam128-image-cosim-20261023",
+  "source_sha256": {
+    "rtl/adam/adam_mul_pair.sv": "2b6e9e7837087efefe1bd12f9866d68219ec09fdbe2bd68925c1d7d03221f935",
+    "rtl/adam/adam_sdp_ram.sv": "20d2ca02713ea7eb826535a8ec7c9131c4b9ede0598b22b254f88d9e59043d0e",
+    "rtl/adam/adam_mac128.sv": "39ed2571e05469ff3247d943d7bdb05c3d71f447019a2134cfcb8dbfb1471b50",
+    "rtl/adam/adam_conv128.sv": "c0de377d148c58cef327528912ee8391c2cdfe003c4438eb6f0597bfae46fec8",
+    "rtl/npu/npu_postprocess.sv": "c0e0ff687ac48cc9340c7474520bd18384091286b65eac33cc3e3d815cbd412c",
+    "rtl/npu/npu_conv128.sv": "4a214f19f23a42d81d534b645f0b024fe81545f4987e28af279210534bd50b7f",
+    "rtl/npu/npu_measure_top.sv": "dc2da1bbd156af6199156b129b58d3aeb3882a27c71f4d3a876d2f8de46b3020",
+    "tools/pango/stage.py": "2ba8f3ada5f0ca49db64f0adaadc61ed11404dc22ff4dd692bfba01084c680e4",
+    "tools/pango/run_synthesis.ps1": "bd81a14facacf37bd56a2fec2ba2a5481f68307479bd5ce241a0e511962cfd04",
+    "tools/pango/GuardedJob.cs": "70dd42a153c8171629f78040b5bc6b4ee5319ff53076ef8459532215578c6e4e",
+    "measurement.fdc": "c673fa7a5107dbfbaef3273619c3631ea4cc431b7539957479a73e0af766add0",
+    "synthesize.tcl": "4ed215b170116541e46adcdb510bd78fb6e49b05ac6a514ebe49fe56716dbf92"
+  },
+  "project": "$PDS_WORK_ROOT/work/npu128-timing-20261024a",
+  "device": "PG2L200H-6IFBB676",
+  "tool_version": "2025.2 build 211867",
+  "parameters": {
+    "MAX_SIDE": 16,
+    "MAX_CIN": 768,
+    "MAC": 128,
+    "post_lanes": 4
+  },
+  "clock_period_ns": 10,
+  "scope": "diagnostic scan harness; no CPU, DDR, AXI, PLL, pinout or board claim",
+  "status": "synthesis completed; estimated setup fails at 100 MHz",
+  "resources": {
+    "npu_measure_top": {
+      "LUT": 5930.0,
+      "FF": 9649.0,
+      "APM": 82.0,
+      "DRM": 94.5
+    },
+    "u_npu(npu_conv128)": {
+      "LUT": 5515.0,
+      "FF": 5407.0,
+      "APM": 82.0,
+      "DRM": 94.5
+    },
+    "u_conv(adam_conv128)": {
+      "LUT": 3600.0,
+      "FF": 3849.0,
+      "APM": 66.0,
+      "DRM": 92.5
+    },
+    "u_post(npu_postprocess)": {
+      "LUT": 1828.0,
+      "FF": 1489.0,
+      "APM": 16.0,
+      "DRM": 2.0
+    },
+    "u_mac(adam_mac128)": {
+      "LUT": 1969.0,
+      "FF": 1982.0,
+      "APM": 64.0,
+      "DRM": 0.0
+    },
+    "u_activation_ram(adam_sdp_ram)": {
+      "LUT": 0.0,
+      "FF": 0.0,
+      "APM": 0.0,
+      "DRM": 64.0
+    },
+    "u_weight_ram(adam_sdp_ram_1)": {
+      "LUT": 1.0,
+      "FF": 0.0,
+      "APM": 0.0,
+      "DRM": 28.5
+    },
+    "scan_harness_difference": {
+      "LUT": 415.0,
+      "FF": 4242.0,
+      "APM": 0.0,
+      "DRM": 0.0
+    }
+  },
+  "cell_usage": [
+    {
+      "GTP Name": "GTP_APM_E2",
+      "Usage": "82"
+    },
+    {
+      "GTP Name": "GTP_DFF",
+      "Usage": "2191"
+    },
+    {
+      "GTP Name": "GTP_DFF_E",
+      "Usage": "24"
+    },
+    {
+      "GTP Name": "GTP_DFF_R",
+      "Usage": "111"
+    },
+    {
+      "GTP Name": "GTP_DFF_RE",
+      "Usage": "7278"
+    },
+    {
+      "GTP Name": "GTP_DFF_S",
+      "Usage": "28"
+    },
+    {
+      "GTP Name": "GTP_DFF_SE",
+      "Usage": "17"
+    },
+    {
+      "GTP Name": "GTP_DRM18K_E1",
+      "Usage": "5"
+    },
+    {
+      "GTP Name": "GTP_DRM36K_E1",
+      "Usage": "92"
+    },
+    {
+      "GTP Name": "GTP_GRS",
+      "Usage": "1"
+    },
+    {
+      "GTP Name": "GTP_LUT1",
+      "Usage": "3"
+    },
+    {
+      "GTP Name": "GTP_LUT2",
+      "Usage": "33"
+    },
+    {
+      "GTP Name": "GTP_LUT3",
+      "Usage": "28"
+    },
+    {
+      "GTP Name": "GTP_LUT4",
+      "Usage": "200"
+    },
+    {
+      "GTP Name": "GTP_LUT5",
+      "Usage": "57"
+    },
+    {
+      "GTP Name": "GTP_LUT6",
+      "Usage": "873"
+    },
+    {
+      "GTP Name": "GTP_LUT6CARRY",
+      "Usage": "3286"
+    },
+    {
+      "GTP Name": "GTP_LUT6D",
+      "Usage": "1450"
+    },
+    {
+      "GTP Name": "GTP_INBUF",
+      "Usage": "6"
+    },
+    {
+      "GTP Name": "GTP_OUTBUF",
+      "Usage": "1"
+    }
+  ],
+  "estimated_fmax": [
+    {
+      "Clock": "clk",
+      "Fmax": "93.9496MHz",
+      "Requested Frequency": "100.0000MHz",
+      "Slack": "-0.644"
+    }
+  ],
+  "estimated_setup": [
+    {
+      "Launch Clock": "clk",
+      "Capture Clock": "clk",
+      "WNS(ns)": "-0.644",
+      "TNS(ns)": "-36.876",
+      "Failing Endpoints": "64",
+      "Total Endpoints": "31924"
+    }
+  ],
+  "estimated_hold": [
+    {
+      "Launch Clock": "clk",
+      "Capture Clock": "clk",
+      "WHS(ns)": "-2.523",
+      "THS(ns)": "-1955.836",
+      "Failing Endpoints": "9345",
+      "Total Endpoints": "31924"
+    }
+  ],
+  "check_timing": [
+    {
+      "Check": "no_clock",
+      "Number of Issues": "0"
+    },
+    {
+      "Check": "virtual_clock",
+      "Number of Issues": "1"
+    },
+    {
+      "Check": "unexpandable_clocks",
+      "Number of Issues": "0"
+    },
+    {
+      "Check": "no_input_delay",
+      "Number of Issues": "0"
+    },
+    {
+      "Check": "no_output_delay",
+      "Number of Issues": "0"
+    },
+    {
+      "Check": "partial_input_delay",
+      "Number of Issues": "0"
+    },
+    {
+      "Check": "partial_output_delay",
+      "Number of Issues": "0"
+    },
+    {
+      "Check": "io_min_max_delay_consistency",
+      "Number of Issues": "0"
+    },
+    {
+      "Check": "input_delay_assigned_to_clock",
+      "Number of Issues": "0"
+    },
+    {
+      "Check": "loops",
+      "Number of Issues": "0"
+    },
+    {
+      "Check": "latch_loops",
+      "Number of Issues": "0"
+    },
+    {
+      "Check": "latchs",
+      "Number of Issues": "0"
+    }
+  ],
+  "worst_setup_path": {
+    "Slack": "-0.644",
+    "Logic Levels": "23",
+    "High Fanout": "71",
+    "Start Point": "u_npu/u_post/N280_m3/CLK",
+    "End Point": "u_npu/u_post/g_post_lane[0].quantized_q2[0][0]/D",
+    "Exception": "",
+    "Launch Clock": "clk",
+    "Capture Clock": "clk",
+    "Clock Edges": "rise-rise",
+    "Clock Skew": "0.000",
+    "Launch Clock Delay": "3.426",
+    "Capture Clock Delay": "3.426",
+    "Clock Pessimism Removal": "0.000",
+    "Requirement": "10.000",
+    "Data delay": "10.258",
+    "Logic delay": "4.184 (40.8%)",
+    "Route delay": "6.074 (59.2%)"
+  },
+  "worst_path_resources": [
+    "clk (port)",
+    "clk",
+    "clk_ibuf/I (GTP_INBUF)",
+    "clk_ibuf/O (GTP_INBUF)",
+    "nt_clk",
+    "u_npu/u_post/N280_m3/CLK (GTP_APM_E2)",
+    "u_npu/u_post/N280_m3/P[39] (GTP_APM_E2)",
+    "u_npu/u_post/_N217",
+    "u_npu/u_post/N280_m4/Z[46] (GTP_APM_E2)",
+    "u_npu/u_post/N280_m4/P[21] (GTP_APM_E2)",
+    "u_npu/u_post/product_q1[0] [62]",
+    "u_npu/u_post/N297_3_2/I3 (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_2/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18077",
+    "u_npu/u_post/N297_3_3/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_3/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18078",
+    "u_npu/u_post/N297_3_4/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_4/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18079",
+    "u_npu/u_post/N297_3_5/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_5/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18080",
+    "u_npu/u_post/N297_3_6/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_6/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18081",
+    "u_npu/u_post/N297_3_7/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_7/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18082",
+    "u_npu/u_post/N297_3_8/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_8/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18083",
+    "u_npu/u_post/N297_3_9/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_9/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18084",
+    "u_npu/u_post/N297_3_10/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_10/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18085",
+    "u_npu/u_post/N297_3_11/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_11/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18086",
+    "u_npu/u_post/N297_3_12/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_12/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18087",
+    "u_npu/u_post/N297_3_13/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_13/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18088",
+    "u_npu/u_post/N297_3_14/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_14/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18089",
+    "u_npu/u_post/N297_3_15/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_15/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18090",
+    "u_npu/u_post/N297_3_16/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_16/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18091",
+    "u_npu/u_post/N297_3_17/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_17/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18092",
+    "u_npu/u_post/N297_3_18/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_18/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18093",
+    "u_npu/u_post/N297_3_19/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_19/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18094",
+    "u_npu/u_post/N297_3_20/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_20/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18095",
+    "u_npu/u_post/N297_3_21/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_21/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18096",
+    "u_npu/u_post/N297_3_22/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_22/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18097",
+    "u_npu/u_post/N297_3_23/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_23/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18098",
+    "u_npu/u_post/N297_3_24/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_24/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18099",
+    "u_npu/u_post/N297_3_25/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_25/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18100",
+    "u_npu/u_post/N297_3_26/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_26/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18101",
+    "u_npu/u_post/N297_3_27/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_27/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18102",
+    "u_npu/u_post/N297_3_28/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_28/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18103",
+    "u_npu/u_post/N297_3_29/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_29/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18104",
+    "u_npu/u_post/N297_3_30/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_30/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18105",
+    "u_npu/u_post/N297_3_31/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_31/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18106",
+    "u_npu/u_post/N297_3_32/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_32/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18107",
+    "u_npu/u_post/N297_3_33/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_33/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18108",
+    "u_npu/u_post/N297_3_34/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_34/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18109",
+    "u_npu/u_post/N297_3_35/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_35/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18110",
+    "u_npu/u_post/N297_3_36/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_36/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18111",
+    "u_npu/u_post/N297_3_37/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_37/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18112",
+    "u_npu/u_post/N297_3_38/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_38/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18113",
+    "u_npu/u_post/N297_3_39/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_39/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18114",
+    "u_npu/u_post/N297_3_40/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_40/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18115",
+    "u_npu/u_post/N297_3_41/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_41/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18116",
+    "u_npu/u_post/N297_3_42/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_42/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18117",
+    "u_npu/u_post/N297_3_43/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_43/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18118",
+    "u_npu/u_post/N297_3_44/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_44/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18119",
+    "u_npu/u_post/N297_3_45/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_45/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18120",
+    "u_npu/u_post/N297_3_46/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_46/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18121",
+    "u_npu/u_post/N297_3_47/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_47/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18122",
+    "u_npu/u_post/N297_3_48/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_48/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18123",
+    "u_npu/u_post/N297_3_49/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_49/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18124",
+    "u_npu/u_post/N297_3_50/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_50/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18125",
+    "u_npu/u_post/N297_3_51/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_51/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18126",
+    "u_npu/u_post/N297_3_52/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_52/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18127",
+    "u_npu/u_post/N297_3_53/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_53/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18128",
+    "u_npu/u_post/N297_3_54/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_54/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18129",
+    "u_npu/u_post/N297_3_55/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_55/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18130",
+    "u_npu/u_post/N297_3_56/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_56/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18131",
+    "u_npu/u_post/N297_3_57/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_57/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18132",
+    "u_npu/u_post/N297_3_58/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_58/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18133",
+    "u_npu/u_post/N297_3_59/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_59/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18134",
+    "u_npu/u_post/N297_3_60/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_60/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18135",
+    "u_npu/u_post/N297_3_61/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_61/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18136",
+    "u_npu/u_post/N297_3_62/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_62/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18137",
+    "u_npu/u_post/N297_3_63/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_63/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N18138",
+    "u_npu/u_post/N297_3_64/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297_3_64/Z (GTP_LUT6CARRY)",
+    "u_npu/u_post/N297[63]",
+    "u_npu/u_post/N298_1[63]/I0 (GTP_LUT3)",
+    "u_npu/u_post/N298_1[63]/Z (GTP_LUT3)",
+    "u_npu/u_post/nb12[63]",
+    "u_npu/u_post/N298_3[51]/I5 (GTP_LUT6)",
+    "u_npu/u_post/N298_3[51]/Z (GTP_LUT6)",
+    "u_npu/u_post/nb14[51]",
+    "u_npu/u_post/N307_mux63_10_15/I4 (GTP_LUT6CARRY)",
+    "u_npu/u_post/N307_mux63_10_15/COUT (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N38908_co",
+    "u_npu/u_post/N307_mux63_10_16/CIN (GTP_LUT6CARRY)",
+    "u_npu/u_post/N307_mux63_10_16/Z (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N38917",
+    "u_npu/u_post/N298_3[54]_3/I4 (GTP_LUT6CARRY)",
+    "u_npu/u_post/N298_3[54]_3/Z (GTP_LUT6CARRY)",
+    "u_npu/u_post/_N38335",
+    "u_npu/u_post/N300_mux56_10/I3 (GTP_LUT5)",
+    "u_npu/u_post/N300_mux56_10/Z (GTP_LUT5)",
+    "u_npu/u_post/N300",
+    "u_npu/u_post/N311_0_/I0 (GTP_LUT3)",
+    "u_npu/u_post/N311_0_/Z (GTP_LUT3)",
+    "u_npu/u_post/N312[0]",
+    "u_npu/u_post/g_post_lane[0].quantized_q2[0][0]/D (GTP_DFF_S)"
+  ],
+  "reported_setup_paths": 100,
+  "all_reported_setup_paths_end_in_activation_ram": false,
+  "memory_guard": {
+    "status": "PASS",
+    "before": {
+      "timestamp": "2026-10-24T10:10:30.0095796+08:00",
+      "available_bytes": 14773465088,
+      "free_commit_bytes": 17437073408
+    },
+    "job_limit_bytes": 2147483648,
+    "reserve_bytes": 6442450944,
+    "timeout_seconds": 1800,
+    "command": "pds_shell.exe -work_dir \"$PROJECT\" -project_name npu128_post -file \"$PROJECT/synthesize.tcl\"",
+    "manifest_sha256": "7d8f0d0da3a3de9b8bccc1719c5b648c5e330454329dc0e1d831c83ff758f05f",
+    "peak_job_commit_bytes": 755634176,
+    "minimum_available_bytes": 13060612096,
+    "minimum_free_commit_bytes": 15549145088,
+    "root_pid": 1380,
+    "exit_code": 0,
+    "elapsed_seconds": 195.864
+  },
+  "raw_evidence_sha256": {
+    "manifest.json": "7d8f0d0da3a3de9b8bccc1719c5b648c5e330454329dc0e1d831c83ff758f05f",
+    "guard.json": "c167103a52439608cb8bb4a41535f11ea0b68a4fc43aa0e3fc9a846564bc35a9",
+    "guard-samples.jsonl": "8f59801f2c4d76c27ffc8334d76d5c892d1ffbd696e5fd6cff2e1b75d49b08f6",
+    "synthesis.log": "f62dea988392cbc586d340047ffa3c162d7d56748e083d179c79e868fcff3c97",
+    "prj_tasks/syn_1/synthesize/npu_measure_top_syn.vm": "f997b08755ea3edac09862ba4499a360c5d89edb740de02a59d83c1e9ce2fdc7",
+    "prj_tasks/syn_1/synthesize/npu_measure_top.snr": "be0df33b44c7800836e718f2706a1e24cc23d069d361bd9cd7f78b57b8fbedb3",
+    "prj_tasks/syn_1/synthesize/report_db/synthesize_resource_utilization.db": "45c2b478389dd71aa09f6ab8d969081a60a2627288cc82c9f4028098158fc066",
+    "prj_tasks/syn_1/synthesize/report_db/synthesize_resource_usage.db": "5079ae96aa38938e829d521aec3324493071b97614574370819c9433657f7bbe",
+    "prj_tasks/syn_1/synthesize/report_db/synthesize_report_timing_fmax.db": "668ce607540640f191e6d29838d191a0c1aca09d78494477a6c6a641531e8363",
+    "prj_tasks/syn_1/synthesize/report_db/synthesize_report_timing_setup.db": "40c920b55e0765184a5718b3edfb09606bddf9a5a984b91076ea438337c77041",
+    "prj_tasks/syn_1/synthesize/report_db/synthesize_report_timing_hold.db": "f9db72885a34b5aeb48f6d0339165bed799e171ecf667d1c12d2901a8c4de98b",
+    "prj_tasks/syn_1/synthesize/report_db/synthesize_report_timing_path_setup.db": "c517fca2526a80b405d6520bc04795111dbcebb23e5125d4f5d3bb43b5ac9109",
+    "prj_tasks/syn_1/synthesize/report_db/synthesize_check_timing_summary.db": "d45e9a4b8810ec5e54407312d27433cf287f90599d51c21f514a2b3873c4b826",
+    "prj_tasks/syn_1/synthesize/report_db/synthesize_settings.db": "e23edbd47227757516fbacd7bacff0225bd3c365140f9e21cdca7f602c06a26b"
+  },
+  "route_run": false,
+  "routed_fmax_mhz": null,
+  "routed_wns_ns": null,
+  "unrouted_nets": null,
+  "board_run": false,
+  "note": "Synthesis estimates do not establish placed/routed or CPU/DDR-integrated performance."
+}

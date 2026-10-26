@@ -1,5 +1,11 @@
 # 图片输入与画框联合仿真
 
+> `fpga/npu128-prefetch` 的图片服务已使用双 bank 装载/计算重叠，协议与数值保持兼容；
+> 非零输入拼接回归与完整 Tiny 分块计数见 [PREFETCH128.md](PREFETCH128.md)。下文图片检测精度仍属原基线。
+
+> `fpga/npu128-timing` 已同步更新图片服务的超时和周期断言，图片传输/拼接回归通过。
+> 下文整图和图片精度结果仍属于原基线；本轮未重跑完整 YOLOX。新记录见 [TIMING128.md](TIMING128.md)。
+
 当前可以输入 JPG/PNG，运行完整 YOLOX-Tiny 计算图，并输出带检测框的图片。
 **83 个 Conv2d 全部使用 Verilator 中的 `adam_conv128`，其他算子由电脑执行。**
 没有模拟 RISC-V 指令、UART、DDR 或 AXI，也未上板。

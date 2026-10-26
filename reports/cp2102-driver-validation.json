@@ -1,0 +1,59 @@
+{
+  "schema": "cp2102-windows-driver-validation-v1",
+  "status": "PASS",
+  "timestamp": "2026-10-24T22:17:20.1474841+08:00",
+  "hardware_id": "USB\\VID_10C4&PID_EA60",
+  "device_name": "Silicon Labs CP210x USB to UART Bridge (COM11)",
+  "problem_code_before": 28,
+  "problem_code_after": 0,
+  "driver_version": "11.5.0.417",
+  "installed_inf": "oem103.inf",
+  "official_package": {
+    "version": "11.5.0.417",
+    "catalog_id": "32293688-4758-4334-98c0-7d634cf3c59e",
+    "source": "https://www.catalog.update.microsoft.com/ScopedViewInline.aspx?updateid=32293688-4758-4334-98c0-7d634cf3c59e",
+    "cab_sha256": "7ea8a03769a05c7bb78718c360b5079be354ed6437623408d51b9c1e8f5a122a",
+    "files": {
+      "driver\\silabser.cat": "d493d2e286e9b4da229a118f85a22e62e644abb97863e44d99d07aacab60028f",
+      "driver\\silabser.inf": "6177a9288df60af71ffed532c05d69ce545bf7a60e83517117dbdc3f7b75e7b3",
+      "driver\\arm\\silabser.sys": "cc9d70a062d030ceb7bbb0e11bb015a01b78f85af0bb6fdadb3018a4dbdb7dd6",
+      "driver\\arm64\\silabser.sys": "9bf72c70ac5e25e646bbf6ce78f25732096bc6bd9bd2158ba7b54e66b9a74abc",
+      "driver\\x64\\silabser.sys": "ca644642c189a216d67e4073f099a8768811d93a0257efd48dc3fc687a9390af",
+      "driver\\x86\\silabser.sys": "fb375d9d7a454ee25217c3d36d9e992fce9a70eacb49f0bcb6906c3bbc7d9220"
+    }
+  },
+  "installation": {
+    "status": "PASS",
+    "operation": "Install Microsoft-signed Silicon Labs CP210x VCP 11.5.0.417 for present CP2102",
+    "timestamp": "2026-10-24T22:11:06.4978615+08:00",
+    "exit_code": 0
+  },
+  "signatures": [
+    {
+      "file": "silabser.cat",
+      "status": "Valid",
+      "signer": "CN=Microsoft Windows Hardware Compatibility Publisher, O=Microsoft Corporation, L=Redmond, S=Washington, C=US",
+      "thumbprint": "32B4E7CE92A59C722B8BDF7AE3E66520CFB9DE21"
+    },
+    {
+      "file": "silabser.sys",
+      "status": "Valid",
+      "signer": "CN=Microsoft Windows Hardware Compatibility Publisher, O=Microsoft Corporation, L=Redmond, S=Washington, C=US",
+      "thumbprint": "32B4E7CE92A59C722B8BDF7AE3E66520CFB9DE21"
+    }
+  ],
+  "raw_evidence_sha256": {
+    "driver-manifest.json": "638c1217935943f0179887569a7e257b47294bc21c40abab5bc30ccc793d7feb",
+    "driver-install-receipt.json": "7573c3329313de69d3e8cb5786a1f86719e2c3264356f35bfbfa447ce54c11cb",
+    "driver-install.log": "a53c58d9d356fc66b653eff42c0bc138bb30ecb881c1ee1fa7fe83e7fa1f9c96",
+    "install-cp210x.ps1": "715e42f29abc9837a0a0a90727f9f73261c28b890559c87a33ab7790ecf7924f",
+    "catalog.html": "9e3fc886eefeba43189f04f3146025c69b4c5950b6e9a445be27eead95b9b0ff",
+    "catalog-details.html": "01af48a95402cea055b3fc4173a4fd0f06d9d9844f9d0f8f73d781679aaf86f7",
+    "catalog-download.html": "0fd1f2ae8add4974a515315bd1c9413474a905e62eec30ba018e8a5631b6ec6f"
+  },
+  "capture_provenance": {
+    "native_file": "F:/pango-project/work/npu128-uart-serial-20261024a/driver-validation.json",
+    "native_sha256": "cbefb842ef00282f0e809d87bc2788bd469cfba5fcc9f6b6b94db17f88170d7a",
+    "repository_format": "UTF-8 LF rendering; original JSON values retained; provenance added"
+  }
+}

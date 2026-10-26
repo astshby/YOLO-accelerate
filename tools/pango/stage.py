@@ -65,7 +65,10 @@ def main():
         files[name] = sha256(target / name)
     manifest = {'schema': 'npu128-pango-synthesis-v1', 'top': 'npu_measure_top',
                 'device': 'PG2L200H-6IFBB676', 'clock_period_ns': 10, 'threads': 1,
-                'parameters': {'MAX_SIDE': 16, 'MAX_CIN': 768, 'MAC': 128, 'post_lanes': 4},
+                'parameters': {'MAX_SIDE': 16, 'MAX_CIN': 768, 'MAC': 128, 'post_lanes': 4,
+                               'activation_banks': 2, 'activation_words_per_bank': 24576,
+                               'measurement_input_bits': 1716, 'activation_segments_per_bank': 3,
+                               'activation_segment_words': 8192},
                 'scope': 'diagnostic scan harness; no CPU, DDR, AXI, PLL, pinout or board claim',
                 'baseline_tag': 'baseline/adam128-image-cosim-20261023',
                 'source_base_commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),

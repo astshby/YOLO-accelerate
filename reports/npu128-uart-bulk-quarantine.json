@@ -1,0 +1,65 @@
+{
+  "schema": "npu128-uart-quarantine-functional-v1",
+  "status": "PASS",
+  "source_sha256": {
+    "rtl/io/uart_mmio_bridge.sv": "7d4d154ebd8996922c92b9cbfa97d05ccff62c5bf5c549045b4948bf88440a55",
+    "tb/uart_quarantine.cpp": "80aa6147a3a1398986ffb1a3ee365f0ad642abd76390b6453282d980fea37fa8"
+  },
+  "result": "PASS framing quarantine: nested valid frame ignored; quiet interval extends on bytes; recovery and hard reset",
+  "metrics": [
+    {
+      "command": [
+        "verilator",
+        "--cc",
+        "--exe",
+        "--build",
+        "-Wall",
+        "-j",
+        "1",
+        "--threads",
+        "1",
+        "--top-module",
+        "uart_mmio_bridge",
+        "-GINTERBYTE_TIMEOUT=32",
+        "--Mdir",
+        "build/bulk-quarantine-a/obj",
+        "rtl/io/uart_mmio_bridge.sv",
+        "/home/yukino/new_project/YOLO-accelerate/tb/uart_quarantine.cpp"
+      ],
+      "returncode": 0,
+      "guard_stop": null,
+      "elapsed_seconds": 10.711973381985445,
+      "sampled_process_group_peak_rss_bytes": 361918464,
+      "minimum_linux_available_bytes": 15319343104,
+      "rss_limit_mib": 768,
+      "per_process_address_space_limit_mib": 1536,
+      "linux_reserve_mib": 6144,
+      "cpu_affinity_count": 1,
+      "nice": 19,
+      "sampling_period_seconds": 0.05,
+      "limits": "RSS is sampled, not a cgroup hard limit; Windows memory is not measured here."
+    },
+    {
+      "command": [
+        "build/bulk-quarantine-a/obj/Vuart_mmio_bridge"
+      ],
+      "returncode": 0,
+      "guard_stop": null,
+      "elapsed_seconds": 0.054873478977242485,
+      "sampled_process_group_peak_rss_bytes": 0,
+      "minimum_linux_available_bytes": 15599067136,
+      "rss_limit_mib": 256,
+      "per_process_address_space_limit_mib": 512,
+      "linux_reserve_mib": 6144,
+      "cpu_affinity_count": 1,
+      "nice": 19,
+      "sampling_period_seconds": 0.05,
+      "limits": "RSS is sampled, not a cgroup hard limit; Windows memory is not measured here."
+    }
+  ],
+  "rejected_candidate_sha256": "91c674ac62a2dbd3a9d79ee0adace432cbdf9441c456a70025d22f01f45ac54a",
+  "scope": "Bridge-byte model with 32-clock quiet timeout: valid nested frame blocked, incoming bytes extend quarantine, quiet recovery and hard reset.",
+  "limitations": [
+    "Actual 100 ms UART pin waveform and full board traffic are checked separately."
+  ]
+}

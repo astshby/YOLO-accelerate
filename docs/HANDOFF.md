@@ -1,5 +1,55 @@
 # YOLO 加速器开发交接
 
+> 当前开发分支 `fpga/npu128-uart-bulk` 新增 128 字节权重批量帧，见 [UART_BULK128.md](UART_BULK128.md)。
+> 首次候选因帧错嵌套命令反例被拒绝。最终隔离修正版功能、四态网表及 100 MHz 布线通过：
+> setup +0.707 ns、hold +0.039 ns，7,733 LUT / 11,715 FF / 82 APM / 126.5 DRM；
+> 新位流 12810002 的 JTAG 临时下载/回读通过，用户已按本次 KEY0；同位流旧/批量三组卷积各 12 向量全部一致，
+> 零重传；19.091 → 11.401 秒（约 1.67 倍），权重有效吞吐约 6.97 倍，2,759 → 1,538 笔事务。
+> 新稳定标签 `baseline/npu128-uart-bulk-20261026` 冻结本阶段，下一步优先 LUT/配置批量装载及整图调度。
+> 稳定标签 `baseline/npu128-100mhz-uart-20261026` 固定 `a35cd65`，作为可用基线保留。
+
+> 2026-10-26 主机收包阶段 `fpga/npu128-uart-host` 仅优化主机收包，见 [UART_HOST128.md](UART_HOST128.md)。
+> 同位流实板完整流程 77.672 → 18.828 秒，2,759 笔事务、零重传，三组卷积全部输出一致。
+> 已从配置丢失状态恢复原 100 MHz 位流，用户已按本次 KEY0；没有改 RTL/约束或重跑 PDS。
+> 下一步按实测事务分布实现权重窗口批量写，再验收批量协议和新位流。
+
+> 硬件阶段 `fpga/npu128-mmio-timing` 已把完整板级入口提升至真实 PLL 100 MHz，见
+> [MMIO_TIMING128.md](MMIO_TIMING128.md)。分级 MMIO 的 21 任务/674 向量回归、
+> 厂商 PLL 整顶层锁定/复位及 200 周期测试、100 MHz 完整 UART 引脚回归和新网表四态回放均通过；
+> 完整顶层 100 MHz 布线 setup +0.805 ns、hold +0.039 ns、未布通 0；6,946 LUT / 9,625 FF / 82 APM / 126.5 DRM。
+> 新位流 usercode `12810001` 的临时 JTAG 下载/回读及 DONE 通过；本次 KEY0 用户已按。
+> COM11 三组卷积实测通过：12 向量、384 个 RAW/INT8 值一致，2,759 次事务、零重传；
+> `reports/npu128-uart100-hardware-validation.json` 保存数值、源码与位流绑定及原始日志哈希。
+> 原 27 MHz 实板 PASS 作为历史基线保留。
+
+> 实际板卡接续见 [BOARD128.md](BOARD128.md)：27 MHz 诊断位流已生成，PG2L200H 的 JTAG 临时下载、
+> 回读、usercode `12802701`、DONE/错误状态通过；KEY0 用户已按。未写 Flash/eFuse。
+> 更换数据线并安装已签名 CP210x 驱动后，COM11 的 ID/ABI 与三组卷积实测通过：12 向量、
+> 384 个 RAW/INT8 值一致，2,759 次事务、零重传。原 `UART_PENDING` 报告作为历史快照保留。
+
+> 最新分支 `fpga/npu128-uart` 的真实管脚顶层、UART→MMIO 桥及 Python 客户端见 [UART128.md](UART128.md)。
+> 27 MHz 原生时钟下，2,777 次事务和三组卷积完整引脚仿真、103 帧字节级 GTP 网表回放通过。
+> 真实管脚 PDS setup +20.614 ns、hold +0.039 ns、未布通 0；完整顶层 6,917 LUT / 9,555 FF / 82 APM / 126.5 DRM。
+> 新顶层估算 Fmax 60.8902 MHz，MMIO 装载控制路径需后续流水优化，不能视为包含外围的 100 MHz 验收。
+> 计算核/MMIO 未修改；原独立 100 MHz 基线保留。UART128.md 保留该阶段实现与仿真边界，未改 hgb。
+
+> 最新分支 `fpga/npu128-mmio` 已完成控制/数据窗口、C11 接口和公开总线端到端仿真，见 [MMIO128.md](MMIO128.md)。
+> 19 个任务、672 个输出向量、269,859 次总线事务通过；新外围尚未做 PDS、总线/串口桥或上板，未改 hgb。
+
+> 计算核基线 `fpga/npu128-ramcompact` 的 RAM 映射压缩及接续步骤见 [RAM128.md](RAM128.md)。
+> 已恢复此前的内存暂停；模块预规划使原 100 MHz 布线 setup/hold 通过，RAM 为 126.5 DRM。
+> setup +0.214 ns、hold +0.037 ns、未布通 0；数值、周期等价、新网表回放及总验收均通过。
+> 最新独立物理结果以 RAM128.md 和 `reports/npu128-ramcompact-validation.json` 为准，尚未上板或接入 SoC。
+
+> 后续 `fpga/npu128-prefetch` 已增加双 bank 激活预装载，接口及最新验证见
+> [PREFETCH128.md](PREFETCH128.md)。连续像素调度基线见 [THROUGHPUT128.md](THROUGHPUT128.md)。
+
+> 2026-10-24 接手补充：用户已要求恢复 128 MAC 时序优化与独立物理评估。
+> 新分支 `fpga/npu128-timing` 的变更、测试及新证据见 [TIMING128.md](TIMING128.md)。
+> 以下是 2026-10-23 的历史交接快照，其中“本次暂缓”描述的是当时交付范围。
+> 后续 128 MAC 独立布局布线在原 100 MHz 约束下通过 setup/hold，
+> 结果与边界见 [IMPLEMENTATION128.md](IMPLEMENTATION128.md)，尚未上板或接入 SoC。
+
 核对日期：2026-10-23。本文对应 `fpga/adam-upstream-faithful` 的实现提交
 `971037ac94fdcd619057c0df0049a9216afff3be`；后续文档提交不改变这份 RTL。
 目标是电脑传入静态图片，由 RISC-V 管理 YOLOX-Tiny 计算图、调用 FPGA 卷积加速器，
